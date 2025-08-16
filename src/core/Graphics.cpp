@@ -71,8 +71,15 @@ void draw(const Graphics& graphics, const GameState& gameState)
     SDL_SetRenderDrawColor(graphics.renderer, 0, 0, 0, 255); // background black
     SDL_RenderClear(graphics.renderer);
 
-    SDL_Rect destRect {gameState.textureX, gameState.textureY, 800, 600};
-    SDL_RenderCopy(graphics.renderer, graphics.texture, nullptr, &destRect);
+    constexpr int tw = 16;
+    constexpr int cols = 144 / tw;
+    constexpr int tx = (36 % cols) * tw;
+    constexpr int ty = (36/ cols) * tw;
+    constexpr int atw = 3 * tw;
+
+    constexpr SDL_Rect sourceRect { tx, ty, tw, tw };
+    const SDL_Rect destRect {gameState.textureX - atw / 2, gameState.textureY - atw / 2, atw, atw};
+    SDL_RenderCopy(graphics.renderer, graphics.texture, &sourceRect, &destRect);
 
     SDL_RenderPresent(graphics.renderer);
     SDL_Delay(5); // small throttle to avoid burning CPU if vsync off

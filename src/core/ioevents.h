@@ -28,7 +28,17 @@ inline void onKeyDown(GameState& state, const SDL_Keysym* keysym)
 
 inline void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* e)
 {
-    if (e->button == SDL_BUTTON_LEFT) {
+    if (e->button == SDL_BUTTON_LEFT && e->state == SDL_PRESSED) {
+        const int mx = e->x;
+        const int my = e->y;
+        gameState.textureX = mx;
+        gameState.textureY = my;
+    }
+}
+
+inline void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e)
+{
+    if (e->state & SDL_BUTTON_LMASK) {
         const int mx = e->x;
         const int my = e->y;
         gameState.textureX = mx;
@@ -48,6 +58,9 @@ inline void handleEvents(GameState& state, SDL_Event* e, SDL_Window* window)
             break;
         case SDL_MOUSEBUTTONDOWN:
             onMouseButtonDown(state, &e->button);
+            break;
+        case SDL_MOUSEMOTION:
+            onMouseMotion(state, &e->motion);
             break;
         default: ;
         }
