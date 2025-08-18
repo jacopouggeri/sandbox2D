@@ -78,7 +78,8 @@ void draw(const Graphics& graphics, const GameState& gameState)
     constexpr int atw = 3 * tw;
 
     constexpr SDL_Rect sourceRect { tx, ty, tw, tw };
-    const SDL_Rect destRect {gameState.playerPos.x - atw / 2, gameState.playerPos.y - atw / 2, atw, atw};
+    phys::Vec2i playerPos = gameState.player.pos_i();
+    const SDL_Rect destRect {playerPos.x - atw / 2, playerPos.y - atw / 2, atw, atw};
     SDL_RenderCopy(graphics.renderer, graphics.texture, &sourceRect, &destRect);
 
     SDL_RenderPresent(graphics.renderer);

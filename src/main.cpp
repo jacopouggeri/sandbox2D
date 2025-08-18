@@ -5,24 +5,25 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
-constexpr int STEP_DELAY_MS = 100; // ms between automatic steps when running
-
 void quitGracefully(const GameState& gameState, const Graphics& graphics) {
     graphics.destroy();
 }
 
 
-void run(GameState& gameState, const Graphics& graphics) {
-    uint32_t lastStep = SDL_GetTicks();
+
+void loop(GameState& gameState, const Graphics& graphics) {
+    constexpr double targetFps = 60.0;
+    uint64_t lastStep = SDL_GetPerformanceCounter();
+    const uint64_t perfFreq = SDL_GetPerformanceFrequency();
 
     while (gameState.running) {
         SDL_Event e;
         handleEvents(gameState, &e, graphics.window);
 
-        if (const uint32_t now = SDL_GetTicks();
-            !gameState.paused &&
-            now - lastStep >= STEP_DELAY_MS)
-        {
+        if (!gameState.paused) {
+            const uint64_t now = SDL_GetPerformanceCounter();
+            const double deltaTime = static_cast<double>(now - lastStep) / static_cast<double>(perfFreq);
+            gameState.step(deltaTime);
             lastStep = now;
         }
 
@@ -40,7 +41,7 @@ int main(int argc, char** args) {
         return EXIT_FAILURE;
     }
 
-    run(gameState, graphics);
+    loop(gameState, graphics);
 
     quitGracefully(gameState, graphics);
     return EXIT_SUCCESS;

@@ -17,16 +17,16 @@ inline void onKeyDown(GameState& state, const SDL_Keysym* keysym) {
         state.running = false;
         break;
     case SDLK_w: // UP
-        state.playerPos.y -= 10;
+        state.player.set_velocity({0, -1});
         break;
     case SDLK_s: // DOWN
-        state.playerPos.y += 10;
+        state.player.set_velocity({0, 1});
         break;
     case SDLK_a: // LEFT
-        state.playerPos.x -= 10;
+        state.player.set_velocity({-1, 0});
         break;
     case SDLK_d: // RIGHT
-        state.playerPos.x += 10;
+        state.player.set_velocity({1, 0});
         break;
     case SDLK_SPACE: // pause
         std::cout << std::format("Pause {}\n", state.paused);
@@ -40,8 +40,7 @@ inline void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* 
     if (e->button == SDL_BUTTON_LEFT && e->state == SDL_PRESSED) {
         const int mx = e->x;
         const int my = e->y;
-        gameState.playerPos.x = mx;
-        gameState.playerPos.y = my;
+        gameState.player.pos = {static_cast<float>(mx), static_cast<float>(my)};
     }
 }
 
@@ -49,8 +48,7 @@ inline void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e) {
     if (e->state & SDL_BUTTON_LMASK) {
         const int mx = e->x;
         const int my = e->y;
-        gameState.playerPos.x = mx;
-        gameState.playerPos.y = my;
+        gameState.player.pos = {static_cast<float>(mx), static_cast<float>(my)};
     }
 }
 
