@@ -11,28 +11,28 @@ file(GLOB_RECURSE SOURCE_FILES
         src/*.h
 )
 
-add_executable(exe ${SOURCE_FILES})
-target_include_directories(exe PRIVATE /opt/homebrew/include)
-target_link_directories(exe PRIVATE /opt/homebrew/lib)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE /opt/homebrew/include)
+target_link_directories(${PROJECT_NAME} PRIVATE /opt/homebrew/lib)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-target_link_libraries(exe PRIVATE SDL2::SDL2 SDL2_image::SDL2_image)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image)
 
 # Assets include directory
 set(ASSETS_DIR "${CMAKE_SOURCE_DIR}/assets")
 set(ASSETS_DST "${CMAKE_CURRENT_BINARY_DIR}/assets")
 
 add_custom_command(
-        TARGET exe POST_BUILD
+        TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${ASSETS_DIR}" "${ASSETS_DST}"
         COMMENT "Copying assets to build folder"
 )
 
 # Warnings + sanitizers (GCC/Clang); clean MSVC setup too
-target_compile_options(exe PRIVATE
+target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:
         -Wall;-Wextra;-Wpedantic
         >
@@ -43,7 +43,7 @@ target_compile_options(exe PRIVATE
         -O3
         >
 )
-target_link_options(exe PRIVATE
+target_link_options(${PROJECT_NAME} PRIVATE
         $<$<AND:$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>,$<CONFIG:Debug>>:
         -fsanitize=address,undefined
         >
@@ -51,5 +51,5 @@ target_link_options(exe PRIVATE
 
 # MSVC alternative warnings (optional)
 if (MSVC)
-    target_compile_options(exe PRIVATE /W4 /permissive-)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /permissive-)
 endif()

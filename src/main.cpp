@@ -7,13 +7,12 @@
 
 constexpr int STEP_DELAY_MS = 100; // ms between automatic steps when running
 
-void quitGracefully(const GameState& gameState, const Graphics& graphics)
-{
+void quitGracefully(const GameState& gameState, const Graphics& graphics) {
     graphics.destroy();
 }
 
-void run(GameState& gameState, const Graphics& graphics)
-{
+
+void run(GameState& gameState, const Graphics& graphics) {
     uint32_t lastStep = SDL_GetTicks();
 
     while (gameState.running) {
@@ -33,8 +32,7 @@ void run(GameState& gameState, const Graphics& graphics)
 
 // Must call quitGracefully if init succeeds
 
-int main(int argc, char** args)
-{
+int main(int argc, char** args) {
     GameState gameState {};
     Graphics graphics;
 
