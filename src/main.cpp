@@ -38,12 +38,11 @@ void loop(GameState& gameState, const Graphics& graphics) {
         handleEvents(gameState, &e, graphics.window);
 
         if (!gameState.paused) {
-
             const double deltaTime = static_cast<double>(frameStart - lastStep) / static_cast<double>(perfFreq);
             handlePlayerInput(gameState);
             gameState.step(deltaTime);
-            lastStep = frameStart;
         }
+        lastStep = frameStart;
 
         draw(graphics, gameState);
         capFPS(frameStart, 1000.0 / targetFps);

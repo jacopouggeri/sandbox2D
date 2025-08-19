@@ -67,7 +67,6 @@ int Graphics::loadTexture(const std::filesystem::path& texturePath)
 
 void draw(const Graphics& graphics, const GameState& gameState)
 {
-    // draw
     SDL_SetRenderDrawColor(graphics.renderer, 0, 0, 0, 255); // background black
     SDL_RenderClear(graphics.renderer);
 
@@ -81,6 +80,18 @@ void draw(const Graphics& graphics, const GameState& gameState)
     phys::Vec2i playerPos = gameState.player.pos_i();
     const SDL_Rect destRect {playerPos.x - atw / 2, playerPos.y - atw / 2, atw, atw};
     SDL_RenderCopy(graphics.renderer, graphics.texture, &sourceRect, &destRect);
+
+    SDL_SetRenderDrawBlendMode(graphics.renderer, SDL_BLENDMODE_BLEND);
+
+    // after your normal draw calls:
+    if (gameState.paused) {
+        // semi-transparent sepia overlay
+        SDL_SetRenderDrawColor(graphics.renderer, 0x99, 0x66, 0x33, 0x80);
+        int w, h;
+        SDL_GetRendererOutputSize(graphics.renderer, &w, &h);
+        const SDL_Rect fullscreen = {0, 0, w, h};
+        SDL_RenderFillRect(graphics.renderer, &fullscreen);
+    }
 
     SDL_RenderPresent(graphics.renderer);
     SDL_Delay(5); // small throttle to avoid burning CPU if vsync off
