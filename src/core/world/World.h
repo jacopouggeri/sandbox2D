@@ -11,7 +11,7 @@
 #include <array>
 #include <iostream>
 
-constexpr int TILE_SIZE = 16 * SPRITE_SCALE;
+constexpr int TILE_SIZE = 16 * DRAW_SCALE;
 constexpr int CHUNK_SIZE = 16;
 constexpr int WORLD_WIDTH_CHUNKS = 8;
 constexpr int WORLD_HEIGHT_CHUNKS = 4;

@@ -57,25 +57,22 @@ bool Graphics::init(const int winW, const int winH, std::string_view windowTitle
 }
 
 // Visible fallback (magenta box) if texture missing
-static void drawPlaceholder(SDL_Renderer* r, const SDL_Rect& rct) {
-    const int hw = rct.w/2, hh = rct.h/2;
+static void drawPlaceholder(SDL_Renderer* r, const SDL_FRect& rct) {
+    const float hw = rct.w/2, hh = rct.h/2;
     SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-    SDL_RenderFillRect(r, &rct);
+    SDL_RenderFillRectF(r, &rct);
     SDL_SetRenderDrawColor(r, 255, 0, 255, 255);
-    const SDL_Rect q[] = {
+    const SDL_FRect q[] = {
         {rct.x, rct.y, hw, hh}, {rct.x + hw, rct.y + hh, rct.w - hw, rct.h - hh}
     };
-    SDL_RenderFillRects(r, q, 2);
+    SDL_RenderFillRectsF(r, q, 2);
 }
 
 phys::Vec2f Graphics::toScreenCoords(const phys::Vec2f& v) const {
-    phys::Vec2f scale;
-    SDL_RenderGetScale(renderer, &scale.x, &scale.y);
     int windowWidth, windowHeight;
     SDL_GetWindowSize(window, &windowWidth, &windowHeight);
     const auto windowSize = static_cast<phys::Vec2f>(phys::Vec2i{windowWidth, windowHeight});
-    const auto scaledWindowSize = phys::Vec2f{ windowSize.x / scale.x, windowSize.y / scale.y };
-    return (v - camera_.pos) * TILE_SIZE + (scaledWindowSize / 2.0f);
+    return (v - camera_.pos) * TILE_SIZE + (windowSize / 2.0f);
 }
 
 void Graphics::drawSprite(const Sprite& sprite, const phys::Vec2f& pos) const
@@ -85,10 +82,10 @@ void Graphics::drawSprite(const Sprite& sprite, const phys::Vec2f& pos) const
     screenPos -= phys::Vec2f{static_cast<float>(sprite.width) / 2.0f, static_cast<float>(sprite.height) / 2.0f};
     const auto screenX = screenPos.x;
     const auto screenY = screenPos.y;
-    const SDL_Rect destRect {static_cast<int>(std::lround(screenX)), static_cast<int>(std::lround(screenY)), sprite.width, sprite.height};
+    const SDL_FRect destRect {screenX, screenY, (float)sprite.width, (float)sprite.height};
 
     if (SDL_Texture* tex = textureManager.getTexture(sprite.textureName)) {
-        SDL_RenderCopy(renderer, tex, &srcRect, &destRect);
+        SDL_RenderCopyF(renderer, tex, &srcRect, &destRect);
     } else {
         drawPlaceholder(renderer, destRect);
     }
@@ -110,7 +107,7 @@ void Graphics::drawWorld(const GameState& gameState) const {
     }
 }
 
-void Graphics::drawText(std::string_view text, int x, int y) const{
+void Graphics::drawText(std::string_view text, float x, float y) const{
     // fps counter
     if (framesPerSecond > 0) {  // Only draw if we have a valid FPS
         static TTF_Font* font = nullptr;
@@ -127,8 +124,8 @@ void Graphics::drawText(std::string_view text, int x, int y) const{
 
         if (textSurface) {
             if (SDL_Texture* fpsTexture = SDL_CreateTextureFromSurface(renderer, textSurface)) {
-                const SDL_Rect fpsRect {x, y, textSurface->w, textSurface->h};  // Position at (10, 10)
-                SDL_RenderCopy(renderer, fpsTexture, nullptr, &fpsRect);
+                const SDL_FRect fpsRect {x, y, (float)textSurface->w, (float)textSurface->h};  // Position at (10, 10)
+                SDL_RenderCopyF(renderer, fpsTexture, nullptr, &fpsRect);
                 SDL_DestroyTexture(fpsTexture);
             }
             SDL_FreeSurface(textSurface);
@@ -140,10 +137,8 @@ void Graphics::draw(const GameState& gameState) const {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // background black
     SDL_RenderClear(renderer);
 
-    SDL_RenderSetScale(renderer, 0.5, 0.5);
     drawWorld(gameState);
     drawSprite(gameState.player.sprite, gameState.player.pos);
-    SDL_RenderSetScale(renderer, 1, 1);
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
@@ -158,7 +153,7 @@ void Graphics::draw(const GameState& gameState) const {
 
     const std::string fpsStr = std::to_string(static_cast<int>(framesPerSecond));
     drawText(fpsStr, 10, 10);
-    drawText(std::format("x: {}, y: {}", gameState.player.pos.x, gameState.player.pos.y), 10, 40);
+    drawText(std::format("x: {:.2f}, y: {:.2f}", gameState.player.pos.x, gameState.player.pos.y), 10, 40);
 
     SDL_RenderPresent(renderer);
     if (SDL_GetHint(SDL_HINT_RENDER_VSYNC) == nullptr) {

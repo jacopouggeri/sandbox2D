@@ -50,7 +50,7 @@ private:
     [[nodiscard]] phys::Vec2f toScreenCoords(const phys::Vec2f& v) const;
     void drawSprite(const Sprite& sprite, const phys::Vec2f& pos) const;
     void drawWorld(const GameState& gameState) const;
-    void drawText(std::string_view text, int x, int y) const;
+    void drawText(std::string_view text, float x, float y) const;
 };
 
 #endif //WINDOWING_H

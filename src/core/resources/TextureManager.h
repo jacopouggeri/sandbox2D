@@ -11,10 +11,12 @@
 #include <string_view>
 #include <unordered_map>
 
+#include "../GameConstants.h"
+
 struct Sprite {
     std::string textureName;
-    int width {static_cast<int>(16 * SPRITE_SCALE)};
-    int height {static_cast<int>(16 * SPRITE_SCALE)};
+    int width {static_cast<int>(16 * DRAW_SCALE)};
+    int height {static_cast<int>(16 * DRAW_SCALE)};
 };
 
 class TextureManager {
