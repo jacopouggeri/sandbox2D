@@ -1,17 +1,17 @@
 //
 // Created by Jacopo Uggeri on 15/08/2025.
 //
-#include "CONST.h"
+#include "GameConstants.h"
 #include "GameState.h"
 #include "Graphics.h"
+#include "Sprite.h"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <filesystem>
 #include <format>
 #include <iostream>
 
-int Graphics::init(const int winW, const int winH, const char* windowTitle)
-{
+int Graphics::init(const int winW, const int winH, const char* windowTitle) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << std::format("SDL_Init error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
@@ -32,58 +32,40 @@ int Graphics::init(const int winW, const int winH, const char* windowTitle)
         return EXIT_FAILURE;
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
         std::cerr << std::format("SDL_CreateRenderer error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
-    const std::filesystem::path texture_path = TEX_PATH / "placeholder.png";
-    if (loadTexture(texture_path) == EXIT_FAILURE) {
-        std::cerr << "Failed to load texture from: " << texture_path << "\n";
-        return EXIT_FAILURE;
-    }
-
     return EXIT_SUCCESS;
 }
 
-int Graphics::loadTexture(const std::filesystem::path& texturePath)
-{
-    SDL_Surface* surface = IMG_Load(texturePath.c_str());
-    if (!surface) {
-        std::cerr << "SDL_LoadBMP Error: " << SDL_GetError() << "\n";
-        return EXIT_FAILURE;
-    }
-
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-
-    if (!texture) {
-        std::cerr << "Texture creation error: " << SDL_GetError() << "\n";
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+void Graphics::drawSprite(const Sprite& sprite, const phys::Vec2i& pos) {
+    auto [x, y] = pos;
+    const int scaledWidth = sprite.width * SPRITE_SCALE;
+    const int scaledHeight = sprite.height * SPRITE_SCALE;
+    const SDL_Rect srcRect {0, 0, sprite.width, sprite.height};
+    const SDL_Rect destRect {x - scaledWidth / 2, y - scaledHeight / 2, scaledWidth, scaledHeight};
+    SDL_RenderCopy(renderer, textureManager.getTexture(sprite.textureName, renderer), &srcRect, &destRect);
 }
 
-void Graphics::draw(const GameState& gameState) const
+void Graphics::drawTiles(const GameState& gameState)
 {
+    for (const auto& [sprite, pos] : gameState.tiles) {
+        drawSprite(sprite, pos);
+    }
+}
+
+void Graphics::draw(const GameState& gameState) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // background black
     SDL_RenderClear(renderer);
 
-    constexpr int tw = 16;
-    constexpr int cols = 144 / tw;
-    constexpr int tx = (36 % cols) * tw;
-    constexpr int ty = (36/ cols) * tw;
-    constexpr int atw = 3 * tw;
-
-    constexpr SDL_Rect sourceRect { tx, ty, tw, tw };
-    phys::Vec2i playerPos = gameState.player.pos_i();
-    const SDL_Rect destRect {playerPos.x - atw / 2, playerPos.y - atw / 2, atw, atw};
-    SDL_RenderCopy(renderer, texture, &sourceRect, &destRect);
+    drawSprite(gameState.player.sprite, gameState.player.pos_i());
+    drawTiles(gameState);
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    // after your normal draw calls:
     if (gameState.paused) {
         // semi-transparent sepia overlay
         SDL_SetRenderDrawColor(renderer, 0x99, 0x66, 0x33, 0x80);

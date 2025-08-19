@@ -5,14 +5,15 @@
 #ifndef WINDOWING_H
 #define WINDOWING_H
 #pragma once
+
 #include "GameState.h"
-#include <filesystem>
+#include "Sprite.h"
 #include <SDL2/SDL.h>
 
 struct Graphics {
-    SDL_Window* window {};
-    SDL_Renderer* renderer {};
-    SDL_Texture* texture {}; // For now, a single texture
+    SDL_Window* window {nullptr};
+    SDL_Renderer* renderer {nullptr};
+    TextureManager textureManager {};
 
     // If successful must be followed by a call to destroy()
     [[nodiscard]] int init(int winW, int winH, const char* windowTitle);
@@ -23,11 +24,9 @@ struct Graphics {
         SDL_Quit();
     }
 
-    void draw( const GameState& gameState) const;
-
-private:
-    [[nodiscard]] int loadTexture(const std::filesystem::path& texturePath);
-
+    void drawSprite(const Sprite& sprite, const phys::Vec2i& pos);
+    void drawTiles(const GameState& gameState);
+    void draw(const GameState& gameState);
 };
 
 #endif //WINDOWING_H

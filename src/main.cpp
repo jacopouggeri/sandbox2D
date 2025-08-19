@@ -1,11 +1,11 @@
-#include "core/CONST.h"
+#include "core/GameConstants.h"
 #include "core/GameState.h"
 #include "core/ioevents.h"
 #include "core/Graphics.h"
 #include <SDL2/SDL.h>
 #include <iostream>
 
-void quitGracefully(const GameState& gameState, const Graphics& graphics) {
+void quitGracefully(const Graphics& graphics) {
     graphics.destroy();
 }
 
@@ -27,7 +27,7 @@ void capFPS(const Uint64 frameStart, const double targetFrameMS) {
 }
 
 
-void loop(GameState& gameState, const Graphics& graphics) {
+void loop(GameState& gameState, Graphics& graphics) {
     uint64_t lastStep = SDL_GetPerformanceCounter();
     const uint64_t perfFreq = SDL_GetPerformanceFrequency();
     SDL_Event e;
@@ -49,8 +49,6 @@ void loop(GameState& gameState, const Graphics& graphics) {
     }
 }
 
-// Must call quitGracefully if init succeeds
-
 int main(int argc, char** args) {
     GameState gameState {};
     Graphics graphics;
@@ -58,9 +56,10 @@ int main(int argc, char** args) {
     if (graphics.init(1280, 720, GAME_NAME.c_str()) != EXIT_SUCCESS) {
         return EXIT_FAILURE;
     }
+    gameState.tiles.push_back({{WALL_TEX}, {100, 100}});
 
     loop(gameState, graphics);
 
-    quitGracefully(gameState, graphics);
+    quitGracefully(graphics);
     return EXIT_SUCCESS;
 }
