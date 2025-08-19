@@ -5,36 +5,35 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 #pragma once
+
+#include "GameConstants.h"
+#include "Sprite.h"
 #include "physics/Vec2.h"
+#include <vector>
+
+struct Tile {
+    Sprite sprite;
+    phys::Vec2i pos;
+};
 
 struct Player {
     constexpr static float SPEED = 200;
-    phys::Vec2f pos;
+    phys::Vec2f pos = {WINDOW_SIZE.x / 2.0f, WINDOW_SIZE.y / 2.0f};
     phys::Vec2f vel;
+    Sprite sprite {std::string(PLAYER_TEX)};
 
-    void set_velocity(const phys::Vec2f v) {
-        vel.x = v.x;
-        vel.y = v.y;
-    }
-
-    void move(const double deltaTime) {
-        pos.x += SPEED * vel.x * static_cast<float>(deltaTime);
-        pos.y += SPEED * vel.y * static_cast<float>(deltaTime);
-    }
-
-    [[nodiscard]] phys::Vec2i pos_i() const {
-        return {static_cast<int>(pos.x), static_cast<int>(pos.y)};
-    }
+    void set_velocity(phys::Vec2f v);
+    void move(double deltaTime);
+    [[nodiscard]] phys::Vec2i pos_i() const;
 };
 
 struct GameState {
     bool running = true;
     bool paused = true;
     Player player;
+    std::vector<Tile> tiles {};
 
-    void step(const double deltaTime) {
-        player.move(deltaTime);
-    }
+    void step(double deltaTime);
 };
 
 #endif //GAMESTATE_H

@@ -1,13 +1,8 @@
-#include "core/CONST.h"
+#include "core/GameConstants.h"
 #include "core/GameState.h"
 #include "core/ioevents.h"
 #include "core/Graphics.h"
 #include <SDL2/SDL.h>
-#include <iostream>
-
-void quitGracefully(const GameState& gameState, const Graphics& graphics) {
-    graphics.destroy();
-}
 
 void capFPS(const Uint64 frameStart, const double targetFrameMS) {
     Uint64 frameEnd = SDL_GetPerformanceCounter();
@@ -27,7 +22,7 @@ void capFPS(const Uint64 frameStart, const double targetFrameMS) {
 }
 
 
-void loop(GameState& gameState, const Graphics& graphics) {
+void loop(GameState& gameState, Graphics& graphics) {
     uint64_t lastStep = SDL_GetPerformanceCounter();
     const uint64_t perfFreq = SDL_GetPerformanceFrequency();
     SDL_Event e;
@@ -35,7 +30,7 @@ void loop(GameState& gameState, const Graphics& graphics) {
     while (gameState.running) {
         constexpr double targetFps = 60.0;
         const uint64_t frameStart = SDL_GetPerformanceCounter();
-        handleEvents(gameState, &e, graphics.window);
+        handleEvents(gameState, &e);
 
         if (!gameState.paused) {
             const double deltaTime = static_cast<double>(frameStart - lastStep) / static_cast<double>(perfFreq);
@@ -49,18 +44,16 @@ void loop(GameState& gameState, const Graphics& graphics) {
     }
 }
 
-// Must call quitGracefully if init succeeds
-
-int main(int argc, char** args) {
+int main() {
     GameState gameState {};
     Graphics graphics;
 
-    if (graphics.init(1280, 720, GAME_NAME.c_str()) != EXIT_SUCCESS) {
+    if (!graphics.init(WINDOW_SIZE.x, WINDOW_SIZE.y, GAME_NAME)) {
         return EXIT_FAILURE;
     }
+    gameState.tiles.push_back({{std::string(WALL_TEX)}, {100, 100}});
 
     loop(gameState, graphics);
 
-    quitGracefully(gameState, graphics);
     return EXIT_SUCCESS;
 }

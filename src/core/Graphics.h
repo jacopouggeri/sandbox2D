@@ -5,29 +5,43 @@
 #ifndef WINDOWING_H
 #define WINDOWING_H
 #pragma once
+
 #include "GameState.h"
-#include <filesystem>
+#include "Sprite.h"
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
+#include <string_view>
 
-struct Graphics {
-    SDL_Window* window {};
-    SDL_Renderer* renderer {};
-    SDL_Texture* texture {}; // For now, a single texture
+class Graphics {
+    SDL_Window* window {nullptr};
+    SDL_Renderer* renderer {nullptr};
+    TextureManager textureManager {};
 
-    // If successful must be followed by a call to destroy()
-    [[nodiscard]] int init(int winW, int winH, const char* windowTitle);
+public:
+    Graphics() = default;
+    ~Graphics() { destroy(); }
 
-    void destroy() const {
-        if (renderer) SDL_DestroyRenderer(renderer);
-        if (window) SDL_DestroyWindow(window);
+    // Delete copy operations
+    Graphics(const Graphics&) = delete;
+    Graphics& operator=(const Graphics&) = delete;
+
+    [[nodiscard]] bool init(int winW, int winH, const std::string_view& windowTitle);
+    void destroy() noexcept {
+        if (renderer) {
+            SDL_DestroyRenderer(renderer);
+            renderer = nullptr;
+        }
+        if (window) {
+            SDL_DestroyWindow(window);
+            window = nullptr;
+        }
+        IMG_Quit();
         SDL_Quit();
     }
 
-    void draw( const GameState& gameState) const;
-
-private:
-    [[nodiscard]] int loadTexture(const std::filesystem::path& texturePath);
-
+    void drawSprite(const Sprite& sprite, const phys::Vec2i& pos) const;
+    void drawTiles(const GameState& gameState) const;
+    void draw(const GameState& gameState);
 };
 
 #endif //WINDOWING_H
