@@ -1,8 +1,9 @@
 //
 // Created by Jacopo Uggeri on 19/08/2025.
 //
-#include "GameConstants.h"
-#include "Sprite.h"
+
+#include "../GameConstants.h"
+#include "TextureManager.h"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <filesystem>

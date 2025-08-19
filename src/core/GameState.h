@@ -7,7 +7,7 @@
 #pragma once
 
 #include "GameConstants.h"
-#include "Sprite.h"
+#include "resources/TextureManager.h"
 #include "physics/Vec2.h"
 #include <vector>
 

@@ -7,7 +7,7 @@
 #pragma once
 
 #include "GameState.h"
-#include "Sprite.h"
+#include "resources/TextureManager.h"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <string_view>
@@ -41,7 +41,7 @@ public:
 
     void drawSprite(const Sprite& sprite, const phys::Vec2i& pos) const;
     void drawTiles(const GameState& gameState) const;
-    void draw(const GameState& gameState);
+    void draw(const GameState& gameState) const;
 };
 
 #endif //WINDOWING_H

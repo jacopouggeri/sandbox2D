@@ -10,7 +10,6 @@
 #include <string_view>
 #include <filesystem>
 
-
 inline constexpr std::string_view GAME_NAME {"Sandbox 2D"};
 inline const std::filesystem::path ASSETS_PATH = "assets";
 inline const std::filesystem::path TEX_PATH = ASSETS_PATH / "textures";

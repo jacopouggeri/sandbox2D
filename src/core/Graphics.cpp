@@ -4,7 +4,7 @@
 #include "GameConstants.h"
 #include "GameState.h"
 #include "Graphics.h"
-#include "Sprite.h"
+#include "resources/TextureManager.h"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <filesystem>
@@ -75,7 +75,7 @@ void Graphics::drawTiles(const GameState& gameState) const {
     }
 }
 
-void Graphics::draw(const GameState& gameState) {
+void Graphics::draw(const GameState& gameState) const {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // background black
     SDL_RenderClear(renderer);
 
