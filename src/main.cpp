@@ -44,7 +44,7 @@ void loop(GameState& gameState, const Graphics& graphics) {
         }
         lastStep = frameStart;
 
-        draw(graphics, gameState);
+        graphics.draw(gameState);
         capFPS(frameStart, 1000.0 / targetFps);
     }
 }

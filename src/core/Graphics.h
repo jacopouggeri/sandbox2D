@@ -23,11 +23,11 @@ struct Graphics {
         SDL_Quit();
     }
 
+    void draw( const GameState& gameState) const;
+
 private:
     [[nodiscard]] int loadTexture(const std::filesystem::path& texturePath);
 
 };
-
-void draw(const Graphics& graphics, const GameState& gameState);
 
 #endif //WINDOWING_H

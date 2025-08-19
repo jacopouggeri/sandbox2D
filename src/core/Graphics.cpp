@@ -65,10 +65,10 @@ int Graphics::loadTexture(const std::filesystem::path& texturePath)
     return EXIT_SUCCESS;
 }
 
-void draw(const Graphics& graphics, const GameState& gameState)
+void Graphics::draw(const GameState& gameState) const
 {
-    SDL_SetRenderDrawColor(graphics.renderer, 0, 0, 0, 255); // background black
-    SDL_RenderClear(graphics.renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // background black
+    SDL_RenderClear(renderer);
 
     constexpr int tw = 16;
     constexpr int cols = 144 / tw;
@@ -79,20 +79,20 @@ void draw(const Graphics& graphics, const GameState& gameState)
     constexpr SDL_Rect sourceRect { tx, ty, tw, tw };
     phys::Vec2i playerPos = gameState.player.pos_i();
     const SDL_Rect destRect {playerPos.x - atw / 2, playerPos.y - atw / 2, atw, atw};
-    SDL_RenderCopy(graphics.renderer, graphics.texture, &sourceRect, &destRect);
+    SDL_RenderCopy(renderer, texture, &sourceRect, &destRect);
 
-    SDL_SetRenderDrawBlendMode(graphics.renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
     // after your normal draw calls:
     if (gameState.paused) {
         // semi-transparent sepia overlay
-        SDL_SetRenderDrawColor(graphics.renderer, 0x99, 0x66, 0x33, 0x80);
+        SDL_SetRenderDrawColor(renderer, 0x99, 0x66, 0x33, 0x80);
         int w, h;
-        SDL_GetRendererOutputSize(graphics.renderer, &w, &h);
+        SDL_GetRendererOutputSize(renderer, &w, &h);
         const SDL_Rect fullscreen = {0, 0, w, h};
-        SDL_RenderFillRect(graphics.renderer, &fullscreen);
+        SDL_RenderFillRect(renderer, &fullscreen);
     }
 
-    SDL_RenderPresent(graphics.renderer);
+    SDL_RenderPresent(renderer);
     SDL_Delay(5); // small throttle to avoid burning CPU if vsync off
 }
