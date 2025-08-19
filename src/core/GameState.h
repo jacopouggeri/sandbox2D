@@ -8,7 +8,7 @@
 #include "physics/Vec2.h"
 
 struct Player {
-    constexpr static float SPEED = 100;
+    constexpr static float SPEED = 200;
     phys::Vec2f pos;
     phys::Vec2f vel;
 

@@ -16,18 +16,6 @@ inline void onKeyDown(GameState& state, const SDL_Keysym* keysym) {
         std::cout << std::format("Quit {}\n", state.paused);
         state.running = false;
         break;
-    case SDLK_w: // UP
-        state.player.set_velocity({0, -1});
-        break;
-    case SDLK_s: // DOWN
-        state.player.set_velocity({0, 1});
-        break;
-    case SDLK_a: // LEFT
-        state.player.set_velocity({-1, 0});
-        break;
-    case SDLK_d: // RIGHT
-        state.player.set_velocity({1, 0});
-        break;
     case SDLK_SPACE: // pause
         std::cout << std::format("Pause {}\n", state.paused);
         state.paused = !state.paused;
@@ -70,6 +58,24 @@ inline void handleEvents(GameState& state, SDL_Event* e, SDL_Window* window) {
         default: ;
         }
     }
+}
+
+inline void handlePlayerInput(GameState& state) {
+    const Uint8* keyState = SDL_GetKeyboardState(nullptr);
+
+    float dx = 0, dy = 0;
+    if (keyState[SDL_SCANCODE_W]) dy -= 1;
+    if (keyState[SDL_SCANCODE_S]) dy += 1;
+    if (keyState[SDL_SCANCODE_A]) dx -= 1;
+    if (keyState[SDL_SCANCODE_D]) dx += 1;
+
+    // normalize for diagonals
+    if (const float len = std::sqrt(dx*dx + dy*dy); len > 0) {
+        dx /= len;
+        dy /= len;
+    }
+
+    state.player.set_velocity({dx , dy});
 }
 
 #endif //IOEVENTS_H

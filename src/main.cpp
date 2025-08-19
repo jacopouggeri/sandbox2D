@@ -9,25 +9,44 @@ void quitGracefully(const GameState& gameState, const Graphics& graphics) {
     graphics.destroy();
 }
 
+void capFPS(const Uint64 frameStart, const double targetFrameMS) {
+    Uint64 frameEnd = SDL_GetPerformanceCounter();
+
+    if (double elapsedMS = static_cast<double>(frameEnd - frameStart) * 1000.0 / static_cast<double>(SDL_GetPerformanceFrequency());
+        elapsedMS < targetFrameMS) {
+        // sleep most of the time
+        SDL_Delay(static_cast<uint32_t>(targetFrameMS - elapsedMS));
+
+        // busy wait remainder
+        while (true) {
+            frameEnd = SDL_GetPerformanceCounter();
+            elapsedMS = static_cast<double>(frameEnd - frameStart) * 1000.0 / static_cast<double>(SDL_GetPerformanceFrequency());
+            if (elapsedMS >= targetFrameMS) break;
+        }
+    }
+}
 
 
 void loop(GameState& gameState, const Graphics& graphics) {
-    constexpr double targetFps = 60.0;
     uint64_t lastStep = SDL_GetPerformanceCounter();
     const uint64_t perfFreq = SDL_GetPerformanceFrequency();
+    SDL_Event e;
 
     while (gameState.running) {
-        SDL_Event e;
+        constexpr double targetFps = 60.0;
+        const uint64_t frameStart = SDL_GetPerformanceCounter();
         handleEvents(gameState, &e, graphics.window);
 
         if (!gameState.paused) {
-            const uint64_t now = SDL_GetPerformanceCounter();
-            const double deltaTime = static_cast<double>(now - lastStep) / static_cast<double>(perfFreq);
+
+            const double deltaTime = static_cast<double>(frameStart - lastStep) / static_cast<double>(perfFreq);
+            handlePlayerInput(gameState);
             gameState.step(deltaTime);
-            lastStep = now;
+            lastStep = frameStart;
         }
 
         draw(graphics, gameState);
+        capFPS(frameStart, 1000.0 / targetFps);
     }
 }
 
