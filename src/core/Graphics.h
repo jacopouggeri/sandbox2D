@@ -9,18 +9,27 @@
 #include "GameState.h"
 #include "Sprite.h"
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
+#include <string_view>
 
-struct Graphics {
+class Graphics {
     SDL_Window* window {nullptr};
     SDL_Renderer* renderer {nullptr};
     TextureManager textureManager {};
 
-    // If successful must be followed by a call to destroy()
-    [[nodiscard]] int init(int winW, int winH, const char* windowTitle);
+public:
+    Graphics() = default;
+    ~Graphics() { destroy(); }
 
+    // Delete copy operations
+    Graphics(const Graphics&) = delete;
+    Graphics& operator=(const Graphics&) = delete;
+
+    [[nodiscard]] int init(int winW, int winH, const std::string_view& windowTitle);
     void destroy() const {
         if (renderer) SDL_DestroyRenderer(renderer);
         if (window) SDL_DestroyWindow(window);
+        IMG_Quit();
         SDL_Quit();
     }
 

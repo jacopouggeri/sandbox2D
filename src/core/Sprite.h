@@ -22,6 +22,10 @@ public:
     TextureManager() = default;
     ~TextureManager();
 
+    // Prevent copying (textures are unique resources)
+    TextureManager(const TextureManager&) = delete;
+    TextureManager& operator=(const TextureManager&) = delete;
+
     void load(SDL_Renderer* renderer);
     SDL_Texture* getTexture(std::string_view textureName);
 

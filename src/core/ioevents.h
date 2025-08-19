@@ -40,7 +40,7 @@ inline void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e) {
     }
 }
 
-inline void handleEvents(GameState& state, SDL_Event* e, SDL_Window* window) {
+inline void handleEvents(GameState& state, SDL_Event* e) {
     while (SDL_PollEvent(e)) {
         switch (e->type) {
         case SDL_QUIT:

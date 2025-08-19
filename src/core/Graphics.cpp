@@ -10,8 +10,9 @@
 #include <filesystem>
 #include <format>
 #include <iostream>
+#include <string_view>
 
-int Graphics::init(const int winW, const int winH, const char* windowTitle) {
+int Graphics::init(const int winW, const int winH, const std::string_view& windowTitle) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << std::format("SDL_Init error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
@@ -22,7 +23,7 @@ int Graphics::init(const int winW, const int winH, const char* windowTitle) {
         return EXIT_FAILURE;
     }
 
-    window = SDL_CreateWindow(windowTitle,
+    window = SDL_CreateWindow(windowTitle.data(),
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         winW, winH,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);

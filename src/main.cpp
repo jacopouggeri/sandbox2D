@@ -4,10 +4,6 @@
 #include "core/Graphics.h"
 #include <SDL2/SDL.h>
 
-void quitGracefully(const Graphics& graphics) {
-    graphics.destroy();
-}
-
 void capFPS(const Uint64 frameStart, const double targetFrameMS) {
     Uint64 frameEnd = SDL_GetPerformanceCounter();
 
@@ -34,7 +30,7 @@ void loop(GameState& gameState, Graphics& graphics) {
     while (gameState.running) {
         constexpr double targetFps = 60.0;
         const uint64_t frameStart = SDL_GetPerformanceCounter();
-        handleEvents(gameState, &e, graphics.window);
+        handleEvents(gameState, &e);
 
         if (!gameState.paused) {
             const double deltaTime = static_cast<double>(frameStart - lastStep) / static_cast<double>(perfFreq);
@@ -48,17 +44,16 @@ void loop(GameState& gameState, Graphics& graphics) {
     }
 }
 
-int main(int argc, char** args) {
+int main() {
     GameState gameState {};
     Graphics graphics;
 
-    if (graphics.init(WINDOW_SIZE.x, WINDOW_SIZE.y, GAME_NAME.data()) != EXIT_SUCCESS) {
+    if (graphics.init(WINDOW_SIZE.x, WINDOW_SIZE.y, GAME_NAME) != EXIT_SUCCESS) {
         return EXIT_FAILURE;
     }
     gameState.tiles.push_back({{std::string(WALL_TEX)}, {100, 100}});
 
     loop(gameState, graphics);
 
-    quitGracefully(graphics);
     return EXIT_SUCCESS;
 }

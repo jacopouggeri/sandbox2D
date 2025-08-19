@@ -23,20 +23,25 @@ SDL_Texture* TextureManager::getTexture(const std::string_view textureName) {
     if (const auto it = textures.find(std::string(textureName)); it != textures.end()) {
         return it->second;
     }
-    return textures.at(std::string(PLACEHOLDER_TEX));
+    if (const auto it = textures.find(std::string(PLACEHOLDER_TEX)); it != textures.end()) {
+        std::cerr << std::format("Failed to load texture with name: {}\n", std::string(textureName));
+        return it->second;
+    }
+    std::cerr << std::format("Failed to load placeholder texture with name: {}\n", std::string(textureName));
+    return nullptr;
 }
 
 SDL_Texture* TextureManager::loadTexture(std::string_view textureName, SDL_Renderer* renderer) {
     SDL_Surface* surf = IMG_Load((TEX_PATH / textureName).c_str());
     if (!surf) {
-        std::cerr << std::format("Failed to load texture: {}\n", std::string(textureName));
+        std::cerr << std::format("Failed to load texture with name: {}\n", std::string(textureName));
         return getTexture(PLACEHOLDER_TEX);
     }
 
     SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surf);
     SDL_FreeSurface(surf);
     if (!tex) {
-        std::cerr << std::format("Failed to create texture: {}", std::string(textureName));
+        std::cerr << std::format("Failed to create texture with name: {}", std::string(textureName));
         return getTexture(PLACEHOLDER_TEX);
     }
 
