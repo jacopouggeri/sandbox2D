@@ -23,8 +23,8 @@ namespace phys
 
         [[nodiscard]] auto dot(const Vec2& other) const {
             using R = std::conditional_t<std::is_integral_v<T>, double, T>;
-            return static_cast<R>(std::hypot(static_cast<double>(x) * static_cast<double>(other.x),
-                                             static_cast<double>(y) * static_cast<double>(other.y)));
+            return static_cast<R>(static_cast<double>(x) * static_cast<double>(other.x) +
+                                  static_cast<double>(y) * static_cast<double>(other.y));
         }
 
         Vec2 tensorDot(const Vec2& other) {
