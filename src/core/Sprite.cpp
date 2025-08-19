@@ -6,25 +6,38 @@
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <filesystem>
+#include <iostream>
 #include <ranges>
 
-SDL_Texture* TextureManager::getTexture(const std::string_view textureName, SDL_Renderer* renderer) {
-    if (textures.contains(std::string(textureName))) {
-        return textures.at(std::string(textureName));
+void TextureManager::load(SDL_Renderer* renderer)
+{
+    const std::vector essentials = {
+        PLACEHOLDER_TEX, PLAYER_TEX, WALL_TEX
+    };
+    for (const auto& tex : essentials) {
+        loadTexture(tex, renderer);
     }
-    return loadTexture(textureName, renderer);
+}
+
+SDL_Texture* TextureManager::getTexture(const std::string_view textureName) {
+    if (const auto it = textures.find(std::string(textureName)); it != textures.end()) {
+        return it->second;
+    }
+    return textures.at(std::string(PLACEHOLDER_TEX));
 }
 
 SDL_Texture* TextureManager::loadTexture(std::string_view textureName, SDL_Renderer* renderer) {
     SDL_Surface* surf = IMG_Load((TEX_PATH / textureName).c_str());
     if (!surf) {
-        throw std::runtime_error("Failed to load texture: " + std::string(textureName));
+        std::cerr << std::format("Failed to load texture: {}\n", std::string(textureName));
+        return getTexture(PLACEHOLDER_TEX);
     }
 
     SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surf);
     SDL_FreeSurface(surf);
     if (!tex) {
-        throw std::runtime_error("Failed to create texture: " + std::string(textureName));
+        std::cerr << std::format("Failed to create texture: {}", std::string(textureName));
+        return getTexture(PLACEHOLDER_TEX);
     }
 
     // insert into cache
@@ -37,4 +50,3 @@ TextureManager::~TextureManager() {
         SDL_DestroyTexture(tex);
     }
 }
-

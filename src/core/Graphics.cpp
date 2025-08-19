@@ -38,16 +38,18 @@ int Graphics::init(const int winW, const int winH, const char* windowTitle) {
         return EXIT_FAILURE;
     }
 
+    textureManager.load(renderer);
+
     return EXIT_SUCCESS;
 }
 
 void Graphics::drawSprite(const Sprite& sprite, const phys::Vec2i& pos) {
     auto [x, y] = pos;
-    const int scaledWidth = sprite.width * SPRITE_SCALE;
-    const int scaledHeight = sprite.height * SPRITE_SCALE;
+    const int scaledWidth {static_cast<int>(static_cast<float>(sprite.width) * SPRITE_SCALE)};
+    const int scaledHeight {static_cast<int>(static_cast<float>(sprite.height) * SPRITE_SCALE)};
     const SDL_Rect srcRect {0, 0, sprite.width, sprite.height};
     const SDL_Rect destRect {x - scaledWidth / 2, y - scaledHeight / 2, scaledWidth, scaledHeight};
-    SDL_RenderCopy(renderer, textureManager.getTexture(sprite.textureName, renderer), &srcRect, &destRect);
+    SDL_RenderCopy(renderer, textureManager.getTexture(sprite.textureName), &srcRect, &destRect);
 }
 
 void Graphics::drawTiles(const GameState& gameState)

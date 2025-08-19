@@ -5,14 +5,19 @@
 #ifndef CONST_H
 #define CONST_H
 #pragma once
-#include <string>
+
+#include "physics/Vec2.h"
+#include <string_view>
 #include <filesystem>
 
-inline const std::string GAME_NAME = "Sandbox 2D";
+
+inline constexpr std::string_view GAME_NAME {"Sandbox 2D"};
 inline const std::filesystem::path ASSETS_PATH = "assets";
 inline const std::filesystem::path TEX_PATH = ASSETS_PATH / "textures";
-inline constexpr std::string PLAYER_TEX = "bacon.png";
-inline constexpr std::string WALL_TEX = "wall.png";
-inline constexpr int SPRITE_SCALE = 3;
+inline constexpr std::string_view PLAYER_TEX {"bacon.png"};
+inline constexpr std::string_view WALL_TEX {"wall.png"};
+inline constexpr std::string_view PLACEHOLDER_TEX = "placeholder.png";
+inline constexpr phys::Vec2i WINDOW_SIZE {1280, 720};
+inline constexpr float SPRITE_SCALE = 3.0;
 
 #endif //CONST_H

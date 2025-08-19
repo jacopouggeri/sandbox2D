@@ -3,7 +3,6 @@
 #include "core/ioevents.h"
 #include "core/Graphics.h"
 #include <SDL2/SDL.h>
-#include <iostream>
 
 void quitGracefully(const Graphics& graphics) {
     graphics.destroy();
@@ -53,10 +52,10 @@ int main(int argc, char** args) {
     GameState gameState {};
     Graphics graphics;
 
-    if (graphics.init(1280, 720, GAME_NAME.c_str()) != EXIT_SUCCESS) {
+    if (graphics.init(WINDOW_SIZE.x, WINDOW_SIZE.y, GAME_NAME.data()) != EXIT_SUCCESS) {
         return EXIT_FAILURE;
     }
-    gameState.tiles.push_back({{WALL_TEX}, {100, 100}});
+    gameState.tiles.push_back({{std::string(WALL_TEX)}, {100, 100}});
 
     loop(gameState, graphics);
 

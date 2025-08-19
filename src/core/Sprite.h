@@ -22,8 +22,8 @@ public:
     TextureManager() = default;
     ~TextureManager();
 
-    // Fetches or loads texture
-    SDL_Texture* getTexture(std::string_view textureName, SDL_Renderer* renderer);
+    void load(SDL_Renderer* renderer);
+    SDL_Texture* getTexture(std::string_view textureName);
 
 private:
     SDL_Texture* loadTexture(std::string_view textureName, SDL_Renderer* renderer);
