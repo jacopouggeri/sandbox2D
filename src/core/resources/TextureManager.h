@@ -13,8 +13,8 @@
 
 struct Sprite {
     std::string textureName;
-    int width {16};
-    int height {16};
+    int width {static_cast<int>(16 * SPRITE_SCALE)};
+    int height {static_cast<int>(16 * SPRITE_SCALE)};
 };
 
 class TextureManager {
@@ -22,7 +22,7 @@ public:
     TextureManager() = default;
     ~TextureManager();
 
-    // Prevent copying (textures are unique resources)
+    // Prevent copying
     TextureManager(const TextureManager&) = delete;
     TextureManager& operator=(const TextureManager&) = delete;
 

@@ -9,29 +9,24 @@
 #include "GameConstants.h"
 #include "resources/TextureManager.h"
 #include "physics/Vec2.h"
-#include <vector>
+#include "world/World.h"
 
-struct Tile {
-    Sprite sprite;
-    phys::Vec2i pos;
-};
 
 struct Player {
-    constexpr static float SPEED = 200;
-    phys::Vec2f pos = {WINDOW_SIZE.x / 2.0f, WINDOW_SIZE.y / 2.0f};
+    constexpr static float SPEED = 10.0f;
+    phys::Vec2f pos = {WORLD_WIDTH_CHUNKS * CHUNK_SIZE / 2, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE / 2};
     phys::Vec2f vel;
     Sprite sprite {std::string(PLAYER_TEX)};
 
     void set_velocity(phys::Vec2f v);
     void move(double deltaTime);
-    [[nodiscard]] phys::Vec2i pos_i() const;
 };
 
 struct GameState {
     bool running = true;
     bool paused = true;
     Player player;
-    std::vector<Tile> tiles {};
+    World world;
 
     void step(double deltaTime);
 };

@@ -16,6 +16,6 @@ inline const std::filesystem::path TEX_PATH = ASSETS_PATH / "textures";
 inline constexpr std::string_view PLAYER_TEX {"bacon.png"};
 inline constexpr std::string_view WALL_TEX {"wall.png"};
 inline constexpr phys::Vec2i WINDOW_SIZE {1280, 720};
-inline constexpr float SPRITE_SCALE = 3.0;
+inline constexpr float SPRITE_SCALE = 6.0;
 
 #endif //CONST_H

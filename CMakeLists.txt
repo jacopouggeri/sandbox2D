@@ -17,8 +17,9 @@ target_link_directories(${PROJECT_NAME} PRIVATE /opt/homebrew/lib)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
 
 # Assets include directory
 set(ASSETS_DIR "${CMAKE_SOURCE_DIR}/assets")

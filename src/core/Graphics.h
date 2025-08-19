@@ -16,6 +16,7 @@ class Graphics {
     SDL_Window* window {nullptr};
     SDL_Renderer* renderer {nullptr};
     TextureManager textureManager {};
+    double framesPerSecond {};
 
 public:
     Graphics() = default;
@@ -25,7 +26,7 @@ public:
     Graphics(const Graphics&) = delete;
     Graphics& operator=(const Graphics&) = delete;
 
-    [[nodiscard]] bool init(int winW, int winH, const std::string_view& windowTitle);
+    [[nodiscard]] bool init(int winW, int winH, std::string_view windowTitle);
     void destroy() noexcept {
         if (renderer) {
             SDL_DestroyRenderer(renderer);
@@ -39,9 +40,17 @@ public:
         SDL_Quit();
     }
 
-    void drawSprite(const Sprite& sprite, const phys::Vec2i& pos) const;
-    void drawTiles(const GameState& gameState) const;
     void draw(const GameState& gameState) const;
+    void cameraFollow(const Player& player) { camera_.pos = player.pos; }
+    void setFPS(double fps) { this->framesPerSecond = fps; }
+
+private:
+    class Camera { public: phys::Vec2f pos {}; } camera_;
+
+    [[nodiscard]] phys::Vec2f toScreenCoords(const phys::Vec2f& v) const;
+    void drawSprite(const Sprite& sprite, const phys::Vec2f& pos) const;
+    void drawWorld(const GameState& gameState) const;
+    void drawText(std::string_view text, int x, int y) const;
 };
 
 #endif //WINDOWING_H
