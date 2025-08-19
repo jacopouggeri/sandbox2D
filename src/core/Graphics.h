@@ -25,16 +25,22 @@ public:
     Graphics(const Graphics&) = delete;
     Graphics& operator=(const Graphics&) = delete;
 
-    [[nodiscard]] int init(int winW, int winH, const std::string_view& windowTitle);
-    void destroy() const {
-        if (renderer) SDL_DestroyRenderer(renderer);
-        if (window) SDL_DestroyWindow(window);
+    [[nodiscard]] bool init(int winW, int winH, const std::string_view& windowTitle);
+    void destroy() noexcept {
+        if (renderer) {
+            SDL_DestroyRenderer(renderer);
+            renderer = nullptr;
+        }
+        if (window) {
+            SDL_DestroyWindow(window);
+            window = nullptr;
+        }
         IMG_Quit();
         SDL_Quit();
     }
 
-    void drawSprite(const Sprite& sprite, const phys::Vec2i& pos);
-    void drawTiles(const GameState& gameState);
+    void drawSprite(const Sprite& sprite, const phys::Vec2i& pos) const;
+    void drawTiles(const GameState& gameState) const;
     void draw(const GameState& gameState);
 };
 

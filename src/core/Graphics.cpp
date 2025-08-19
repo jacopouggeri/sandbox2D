@@ -12,15 +12,15 @@
 #include <iostream>
 #include <string_view>
 
-int Graphics::init(const int winW, const int winH, const std::string_view& windowTitle) {
+bool Graphics::init(const int winW, const int winH, const std::string_view& windowTitle) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << std::format("SDL_Init error: %s\n", SDL_GetError());
-        return EXIT_FAILURE;
+        return false;
     }
 
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
         std::cerr << "IMG Init Error: " << IMG_GetError() << "\n";
-        return EXIT_FAILURE;
+        return false;
     }
 
     window = SDL_CreateWindow(windowTitle.data(),
@@ -30,31 +30,46 @@ int Graphics::init(const int winW, const int winH, const std::string_view& windo
 
     if (!window) {
         std::cerr << std::format("SDL_CreateWindow error: %s\n", SDL_GetError());
-        return EXIT_FAILURE;
+        return false;
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
         std::cerr << std::format("SDL_CreateRenderer error: %s\n", SDL_GetError());
-        return EXIT_FAILURE;
+        return false;
     }
 
-    textureManager.load(renderer);
-
-    return EXIT_SUCCESS;
+    textureManager.loadTextures(renderer);
+    return true;
 }
 
-void Graphics::drawSprite(const Sprite& sprite, const phys::Vec2i& pos) {
+// Visible fallback (magenta box) if texture missing
+static void drawPlaceholder(SDL_Renderer* r, const SDL_Rect& rct) {
+    const int hw = rct.w/2, hh = rct.h/2;
+    SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+    SDL_RenderFillRect(r, &rct);
+    SDL_SetRenderDrawColor(r, 255, 0, 255, 255);
+    const SDL_Rect q[] = {
+        {rct.x, rct.y, hw, hh}, {rct.x + hw, rct.y + hh, rct.w - hw, rct.h - hh}
+    };
+    SDL_RenderFillRects(r, q, 2);
+}
+
+void Graphics::drawSprite(const Sprite& sprite, const phys::Vec2i& pos) const {
     auto [x, y] = pos;
     const int scaledWidth {static_cast<int>(static_cast<float>(sprite.width) * SPRITE_SCALE)};
     const int scaledHeight {static_cast<int>(static_cast<float>(sprite.height) * SPRITE_SCALE)};
     const SDL_Rect srcRect {0, 0, sprite.width, sprite.height};
     const SDL_Rect destRect {x - scaledWidth / 2, y - scaledHeight / 2, scaledWidth, scaledHeight};
-    SDL_RenderCopy(renderer, textureManager.getTexture(sprite.textureName), &srcRect, &destRect);
+
+    if (SDL_Texture* tex = textureManager.getTexture(sprite.textureName)) {
+        SDL_RenderCopy(renderer, tex, &srcRect, &destRect);
+    } else {
+        drawPlaceholder(renderer, destRect);
+    }
 }
 
-void Graphics::drawTiles(const GameState& gameState)
-{
+void Graphics::drawTiles(const GameState& gameState) const {
     for (const auto& [sprite, pos] : gameState.tiles) {
         drawSprite(sprite, pos);
     }

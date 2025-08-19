@@ -26,11 +26,11 @@ public:
     TextureManager(const TextureManager&) = delete;
     TextureManager& operator=(const TextureManager&) = delete;
 
-    void load(SDL_Renderer* renderer);
-    SDL_Texture* getTexture(std::string_view textureName);
+    void loadTextures(SDL_Renderer* renderer);
+    [[nodiscard]] SDL_Texture* getTexture(std::string_view textureName) const;
 
 private:
-    SDL_Texture* loadTexture(std::string_view textureName, SDL_Renderer* renderer);
+    void loadTexture(std::string_view textureName, SDL_Renderer* renderer);
 
     std::unordered_map<std::string, SDL_Texture*> textures;
 };

@@ -18,7 +18,7 @@ struct Tile {
 
 struct Player {
     constexpr static float SPEED = 200;
-    phys::Vec2f pos = {WINDOW_SIZE.x / 2.0, WINDOW_SIZE.y / 2.0};
+    phys::Vec2f pos = {WINDOW_SIZE.x / 2.0f, WINDOW_SIZE.y / 2.0f};
     phys::Vec2f vel;
     Sprite sprite {std::string(PLAYER_TEX)};
 

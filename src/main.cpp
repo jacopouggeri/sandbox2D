@@ -48,7 +48,7 @@ int main() {
     GameState gameState {};
     Graphics graphics;
 
-    if (graphics.init(WINDOW_SIZE.x, WINDOW_SIZE.y, GAME_NAME) != EXIT_SUCCESS) {
+    if (!graphics.init(WINDOW_SIZE.x, WINDOW_SIZE.y, GAME_NAME)) {
         return EXIT_FAILURE;
     }
     gameState.tiles.push_back({{std::string(WALL_TEX)}, {100, 100}});
