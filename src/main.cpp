@@ -3,28 +3,33 @@
 #include "core/ioevents.h"
 #include "core/Graphics.h"
 #include <SDL2/SDL.h>
+#include <algorithm>
 
 void loop(GameState& gameState, Graphics& graphics) {
     uint64_t lastStep = SDL_GetPerformanceCounter();
     const uint64_t perfFreq = SDL_GetPerformanceFrequency();
+    int frameCounter = 0;
     SDL_Event e;
 
     while (gameState.running) {
         const uint64_t frameStart = SDL_GetPerformanceCounter();
         handleEvents(gameState, &e);
 
-        const double deltaTime = static_cast<double>(frameStart - lastStep) / static_cast<double>(perfFreq);
+        const auto elapsedSeconds = static_cast<double>(frameStart - lastStep);
+        const double rawDeltaSeconds = elapsedSeconds / static_cast<double>(perfFreq);
+        const double deltaSeconds = std::clamp(rawDeltaSeconds, 0.001, 1.0);
+
         if (!gameState.paused) {
             handlePlayerInput(gameState);
-            gameState.step(deltaTime);
+            gameState.step(deltaSeconds);
             graphics.cameraFollow(gameState.player);
         }
         lastStep = frameStart;
 
-        const double fps = 1.0 / deltaTime;
-        static constexpr int FPS_UPDATE_INTERVAL = 5;
-        if (lastStep % FPS_UPDATE_INTERVAL == 0) graphics.setFPS(fps);
+        const double fps = 1.0 / deltaSeconds;
+        if (constexpr int FPS_UPDATE_FRAMES = 10; frameCounter % FPS_UPDATE_FRAMES == 0) graphics.setFPS(fps);
         graphics.draw(gameState);
+        frameCounter++;
     }
 }
 

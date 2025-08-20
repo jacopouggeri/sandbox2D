@@ -9,12 +9,12 @@ void Player::set_velocity(phys::Vec2f v) {
     vel.y = v.y;
 }
 
-void Player::move(double deltaTime) {
-    const auto dt = static_cast<float>(deltaTime);
+void Player::move(double deltaSeconds) {
+    const auto dt = static_cast<float>(deltaSeconds);
     pos.x += SPEED * vel.x * dt;
     pos.y += SPEED * vel.y * dt;
 }
 
-void GameState::step(double deltaTime) {
-    player.move(deltaTime);
+void GameState::step(double deltaSeconds) {
+    player.move(deltaSeconds);
 }

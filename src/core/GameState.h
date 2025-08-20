@@ -19,7 +19,7 @@ struct Player {
     Sprite sprite {std::string(PLAYER_TEX)};
 
     void set_velocity(phys::Vec2f v);
-    void move(double deltaTime);
+    void move(double deltaSeconds);
 };
 
 struct GameState {
@@ -28,7 +28,7 @@ struct GameState {
     Player player;
     World world;
 
-    void step(double deltaTime);
+    void step(double deltaSeconds);
 };
 
 #endif //GAMESTATE_H

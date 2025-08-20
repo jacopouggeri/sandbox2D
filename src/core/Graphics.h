@@ -13,10 +13,11 @@
 #include <string_view>
 
 class Graphics {
-    SDL_Window* window {nullptr};
-    SDL_Renderer* renderer {nullptr};
-    TextureManager textureManager {};
-    double framesPerSecond {};
+    SDL_Window* window_ {nullptr};
+    SDL_Renderer* renderer_ {nullptr};
+    TextureManager textureManager_ {};
+    double framesPerSecond_ {};
+    bool vsyncEnabled_ {true};
 
 public:
     Graphics() = default;
@@ -28,13 +29,13 @@ public:
 
     [[nodiscard]] bool init(int winW, int winH, std::string_view windowTitle);
     void destroy() noexcept {
-        if (renderer) {
-            SDL_DestroyRenderer(renderer);
-            renderer = nullptr;
+        if (renderer_) {
+            SDL_DestroyRenderer(renderer_);
+            renderer_ = nullptr;
         }
-        if (window) {
-            SDL_DestroyWindow(window);
-            window = nullptr;
+        if (window_) {
+            SDL_DestroyWindow(window_);
+            window_ = nullptr;
         }
         IMG_Quit();
         SDL_Quit();
@@ -42,7 +43,7 @@ public:
 
     void draw(const GameState& gameState) const;
     void cameraFollow(const Player& player) { camera_.pos = player.pos; }
-    void setFPS(double fps) { this->framesPerSecond = fps; }
+    void setFPS(double fps) { this->framesPerSecond_ = fps; }
 
 private:
     class Camera { public: phys::Vec2f pos {}; } camera_;
