@@ -22,7 +22,8 @@ void loop(GameState& gameState, Graphics& graphics) {
         lastStep = frameStart;
 
         const double fps = 1.0 / deltaTime;
-        if (lastStep % 5 == 0) graphics.setFPS(fps);
+        static constexpr int FPS_UPDATE_INTERVAL = 5;
+        if (lastStep % FPS_UPDATE_INTERVAL == 0) graphics.setFPS(fps);
         graphics.draw(gameState);
     }
 }
