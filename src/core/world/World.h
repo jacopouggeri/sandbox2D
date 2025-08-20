@@ -68,15 +68,15 @@ struct World {
         return chunks[chunkY*WORLD_WIDTH_CHUNKS + chunkX];
     }
 
-    [[nodiscard]] static constexpr std::pair<int,int> chunkCoords(int chunkIdx) noexcept {
+    [[nodiscard]] static constexpr phys::Vec2i chunkCoords(int chunkIdx) noexcept {
         return { chunkIdx % WORLD_WIDTH_CHUNKS, chunkIdx / WORLD_WIDTH_CHUNKS };
     }
 
-    [[nodiscard]] static constexpr std::pair<int,int> tileCoords(int tileIdx) noexcept {
+    [[nodiscard]] static constexpr phys::Vec2i tileCoords(int tileIdx) noexcept {
         return { tileIdx % CHUNK_SIZE, tileIdx / CHUNK_SIZE };
     }
 
-    [[nodiscard]] static constexpr std::pair<int,int> worldCoords(int chunkIdx, int tileIdx) noexcept {
+    [[nodiscard]] static constexpr phys::Vec2i worldCoords(int chunkIdx, int tileIdx) noexcept {
         auto [chunkX, chunkY] = chunkCoords(chunkIdx);
         auto [tileX,  tileY]  = tileCoords(tileIdx);
         return { chunkX * CHUNK_SIZE + tileX,

@@ -42,7 +42,8 @@ public:
     }
 
     void draw(const GameState& gameState) const;
-    void cameraFollow(const Player& player) { camera_.pos = player.pos; }
+    void cameraSnap(const Player& player) { camera_.pos = player.pos; }
+    void cameraFollow(const Player& player, double deltaSeconds);
     void setFPS(double fps) { this->framesPerSecond_ = fps; }
 
 private:

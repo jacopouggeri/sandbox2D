@@ -11,6 +11,9 @@ void loop(GameState& gameState, Graphics& graphics) {
     int frameCounter = 0;
     SDL_Event e;
 
+    // Temporary hack to make the camera center on the player from the start
+    graphics.cameraSnap(gameState.player);
+
     while (gameState.running) {
         const uint64_t frameStart = SDL_GetPerformanceCounter();
         handleEvents(gameState, &e);
@@ -22,7 +25,7 @@ void loop(GameState& gameState, Graphics& graphics) {
         if (!gameState.paused) {
             handlePlayerInput(gameState);
             gameState.step(deltaSeconds);
-            graphics.cameraFollow(gameState.player);
+            graphics.cameraFollow(gameState.player, deltaSeconds);
         }
         lastStep = frameStart;
 

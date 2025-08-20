@@ -57,6 +57,16 @@ bool Graphics::init(const int winW, const int winH, std::string_view windowTitle
     return true;
 }
 
+void Graphics::cameraFollow(const Player& player, double deltaSeconds) {
+    const auto dt = static_cast<float>(deltaSeconds);
+    constexpr float CAMERA_STIFFNESS = 50.0f;
+
+    const phys::Vec2f toPlayer = player.pos - camera_.pos;
+    const float snapFactor = 1.0f - std::exp(-CAMERA_STIFFNESS * dt);
+    camera_.pos += toPlayer * snapFactor;
+}
+
+
 // Visible fallback (magenta box) if texture missing
 static void drawPlaceholder(SDL_Renderer* r, const SDL_FRect& rct) {
     const float hw = rct.w/2, hh = rct.h/2;
@@ -100,10 +110,8 @@ void Graphics::drawWorld(const GameState& gameState) const {
             const auto& tile = chunk.tiles[tileIdx];
             if (tile.sprite.textureName.empty()) continue;
 
-            auto [worldX, worldY] = World::worldCoords(chunkIdx, tileIdx);
-            auto screenX = static_cast<float>(worldX);
-            auto screenY = static_cast<float>(worldY);
-            drawSprite(tile.sprite, {screenX, screenY});
+            auto screenPos {static_cast<phys::Vec2f>(World::worldCoords(chunkIdx, tileIdx))};
+            drawSprite(tile.sprite, screenPos);
         }
     }
 }
