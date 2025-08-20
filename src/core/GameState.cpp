@@ -4,20 +4,15 @@
 
 #include "GameState.h"
 
-void Player::set_velocity(const phys::Vec2f v) {
-    vel.x = v.x;
-    vel.y = v.y;
+void Player::set_velocity(phys::Vec2f v) {
+    vel = v;
 }
 
-void Player::move(const double deltaTime) {
-    pos.x += SPEED * vel.x * static_cast<float>(deltaTime);
-    pos.y += SPEED * vel.y * static_cast<float>(deltaTime);
+void Player::move(double deltaSeconds) {
+    const auto dt = static_cast<float>(deltaSeconds);
+    pos +=  vel * SPEED * dt;
 }
 
-phys::Vec2i Player::pos_i() const {
-    return {static_cast<int>(pos.x), static_cast<int>(pos.y)};
-}
-
-void GameState::step(double deltaTime) {
-    player.move(deltaTime);
+void GameState::step(double deltaSeconds) {
+    player.move(deltaSeconds);
 }

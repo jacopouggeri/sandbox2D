@@ -11,10 +11,12 @@
 #include <string_view>
 #include <unordered_map>
 
+#include "../GameConstants.h"
+
 struct Sprite {
     std::string textureName;
-    int width {16};
-    int height {16};
+    int width {static_cast<int>(16 * DRAW_SCALE)};
+    int height {static_cast<int>(16 * DRAW_SCALE)};
 };
 
 class TextureManager {
@@ -22,7 +24,7 @@ public:
     TextureManager() = default;
     ~TextureManager();
 
-    // Prevent copying (textures are unique resources)
+    // Prevent copying
     TextureManager(const TextureManager&) = delete;
     TextureManager& operator=(const TextureManager&) = delete;
 

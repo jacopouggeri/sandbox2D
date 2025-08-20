@@ -7,33 +7,31 @@
 #pragma once
 
 #include "GameConstants.h"
-#include "Sprite.h"
+#include "resources/TextureManager.h"
 #include "physics/Vec2.h"
-#include <vector>
+#include "world/World.h"
 
-struct Tile {
-    Sprite sprite;
-    phys::Vec2i pos;
-};
 
 struct Player {
-    constexpr static float SPEED = 200;
-    phys::Vec2f pos = {WINDOW_SIZE.x / 2.0f, WINDOW_SIZE.y / 2.0f};
+    constexpr static float SPEED = 10.0f;
+    constexpr static float JUMP_SPEED = 10.0f;
+    constexpr static phys::Vec2i WORLD_SIZE {WORLD_WIDTH_CHUNKS * CHUNK_SIZE, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE};
+    constexpr static phys::Vec2f PLAYER_START_POS {static_cast<phys::Vec2f>(WORLD_SIZE) / 2.0f};
+    phys::Vec2f pos = PLAYER_START_POS;
     phys::Vec2f vel;
     Sprite sprite {std::string(PLAYER_TEX)};
 
     void set_velocity(phys::Vec2f v);
-    void move(double deltaTime);
-    [[nodiscard]] phys::Vec2i pos_i() const;
+    void move(double deltaSeconds);
 };
 
 struct GameState {
     bool running = true;
     bool paused = true;
     Player player;
-    std::vector<Tile> tiles {};
+    World world;
 
-    void step(double deltaTime);
+    void step(double deltaSeconds);
 };
 
 #endif //GAMESTATE_H
