@@ -1,10 +1,10 @@
 //
 // Created by Jacopo Uggeri on 15/08/2025.
 //
-#include "GameConstants.h"
-#include "GameState.h"
+
 #include "Graphics.h"
-#include "resources/TextureManager.h"
+#include "../game/GameState.h"
+#include "../game/resources/TextureManager.h"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>

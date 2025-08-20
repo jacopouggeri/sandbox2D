@@ -2,8 +2,8 @@
 // Created by Jacopo Uggeri on 15/08/2025.
 //
 
-#ifndef CONST_H
-#define CONST_H
+#ifndef CONFIG_H
+#define CONFIG_H
 #pragma once
 
 #include "physics/Vec2.h"
@@ -22,4 +22,4 @@ inline constexpr std::string_view WALL_TEX {"wall.png"};
 inline constexpr phys::Vec2i WINDOW_SIZE {1280, 720};
 inline constexpr float DRAW_SCALE = 4.0;
 
-#endif //CONST_H
+#endif //CONFIG_H

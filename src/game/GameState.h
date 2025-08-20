@@ -6,7 +6,7 @@
 #define GAMESTATE_H
 #pragma once
 
-#include "GameConstants.h"
+#include "Config.h"
 #include "resources/TextureManager.h"
 #include "physics/Vec2.h"
 #include "world/World.h"

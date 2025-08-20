@@ -11,7 +11,7 @@
 #include <string_view>
 #include <unordered_map>
 
-#include "../GameConstants.h"
+#include "../Config.h"
 
 struct Sprite {
     std::string textureName;

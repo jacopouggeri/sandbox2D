@@ -5,7 +5,7 @@
 #ifndef IOEVENTS_H
 #define IOEVENTS_H
 #pragma once
-#include "GameState.h"
+#include "../game/GameState.h"
 #include <SDL2/SDL.h>
 #include <format>
 #include <iostream>

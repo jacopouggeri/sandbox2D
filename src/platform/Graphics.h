@@ -2,12 +2,12 @@
 // Created by Jacopo Uggeri on 15/08/2025.
 //
 
-#ifndef WINDOWING_H
-#define WINDOWING_H
+#ifndef GRAPHICS_H
+#define GRAPHICS_H
 #pragma once
 
-#include "GameState.h"
-#include "resources/TextureManager.h"
+#include "../game/GameState.h"
+#include "../game/resources/TextureManager.h"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -57,4 +57,4 @@ private:
     void drawText(std::string_view text, float x, float y) const;
 };
 
-#endif //WINDOWING_H
+#endif //GRAPHICS_H

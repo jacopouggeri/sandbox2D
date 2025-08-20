@@ -1,7 +1,7 @@
-#include "core/GameConstants.h"
-#include "core/GameState.h"
-#include "core/ioevents.h"
-#include "core/Graphics.h"
+#include "../game/Config.h"
+#include "../game/GameState.h"
+#include "ioevents.h"
+#include "Graphics.h"
 #include <SDL2/SDL.h>
 #include <algorithm>
 
@@ -38,7 +38,7 @@ void loop(GameState& gameState, Graphics& graphics) {
 
 int main() {
     GameState gameState {};
-    Graphics graphics;
+    Graphics graphics {};
 
     if (!graphics.init(WINDOW_SIZE.x, WINDOW_SIZE.y, GAME_NAME)) {
         return EXIT_FAILURE;
