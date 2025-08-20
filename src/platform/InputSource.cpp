@@ -1,16 +1,13 @@
 //
-// Created by Jacopo Uggeri on 15/08/2025.
+// Created by Jacopo Uggeri on 20/08/2025.
 //
 
-#ifndef IOEVENTS_H
-#define IOEVENTS_H
-#pragma once
-#include "../game/GameState.h"
-#include <SDL2/SDL.h>
-#include <format>
+#include "platform/InputSource.h"
+#include "game/GameState.h"
+
 #include <iostream>
 
-inline void onKeyDown(GameState& state, const SDL_Keysym* keysym) {
+void onKeyDown(GameState &state, const SDL_Keysym *keysym) {
     switch (keysym->sym) {
     case SDLK_q: // quit
         std::cout << std::format("Quit {}\n", state.paused);
@@ -24,7 +21,7 @@ inline void onKeyDown(GameState& state, const SDL_Keysym* keysym) {
     }
 }
 
-inline void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* e) {
+void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* e) {
     if (e->button == SDL_BUTTON_LEFT && e->state == SDL_PRESSED) {
         const int mx = e->x;
         const int my = e->y;
@@ -32,7 +29,8 @@ inline void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* 
     }
 }
 
-inline void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e) {
+void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e)
+{
     if (e->state & SDL_BUTTON_LMASK) {
         const int mx = e->x;
         const int my = e->y;
@@ -40,7 +38,7 @@ inline void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e) {
     }
 }
 
-inline void handleEvents(GameState& state, SDL_Event* e) {
+void handleEvents(GameState &state, SDL_Event *e) {
     while (SDL_PollEvent(e)) {
         switch (e->type) {
         case SDL_QUIT:
@@ -60,7 +58,7 @@ inline void handleEvents(GameState& state, SDL_Event* e) {
     }
 }
 
-inline void handlePlayerInput(GameState& state) {
+void handlePlayerInput(GameState& state) {
     const Uint8* keyState = SDL_GetKeyboardState(nullptr);
 
     float dx = 0, dy = 0;
@@ -78,4 +76,3 @@ inline void handlePlayerInput(GameState& state) {
     state.player.set_velocity({dx , dy});
 }
 
-#endif //IOEVENTS_H

@@ -2,16 +2,16 @@
 // Created by Jacopo Uggeri on 19/08/2025.
 //
 
-#ifndef SANDBOX2D_SPRITE_H
-#define SANDBOX2D_SPRITE_H
+#ifndef SANDBOX2D_TEXTURE_MANAGER_H
+#define SANDBOX2D_TEXTURE_MANAGER_H
 #pragma once
 
-#include <SDL2/SDL.h>
+#include "game/Config.h"
+
+#include <SDL.h>
 #include <string>
 #include <string_view>
 #include <unordered_map>
-
-#include "../Config.h"
 
 struct Sprite {
     std::string textureName;
@@ -37,4 +37,4 @@ private:
     std::unordered_map<std::string, SDL_Texture*> textures;
 };
 
-#endif //SANDBOX2D_SPRITE_H
+#endif //SANDBOX2D_TEXTURE_MANAGER_H

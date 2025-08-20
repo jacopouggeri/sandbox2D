@@ -2,17 +2,15 @@
 // Created by Jacopo Uggeri on 15/08/2025.
 //
 
-#include "Graphics.h"
-#include "../game/GameState.h"
-#include "../game/resources/TextureManager.h"
-#include <SDL2/SDL.h>
+#include "platform/Graphics.h"
+
+#include "game/GameState.h"
+
+#include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include <format>
 #include <iostream>
 #include <string_view>
-#include <cmath>
-
 bool Graphics::init(const int winW, const int winH, std::string_view windowTitle) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << std::format("SDL_Init error: {}\n", SDL_GetError());
@@ -57,6 +55,20 @@ bool Graphics::init(const int winW, const int winH, std::string_view windowTitle
     return true;
 }
 
+void Graphics::destroy() noexcept {
+    if (renderer_) {
+        SDL_DestroyRenderer(renderer_);
+        renderer_ = nullptr;
+    }
+    if (window_) {
+        SDL_DestroyWindow(window_);
+        window_ = nullptr;
+    }
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
+}
+
 void Graphics::cameraFollow(const Player& player, double deltaSeconds) {
     const auto dt = static_cast<float>(deltaSeconds);
     constexpr float CAMERA_STIFFNESS = 50.0f;
@@ -65,7 +77,6 @@ void Graphics::cameraFollow(const Player& player, double deltaSeconds) {
     const float snapFactor = 1.0f - std::exp(-CAMERA_STIFFNESS * dt);
     camera_.pos += toPlayer * snapFactor;
 }
-
 
 // Visible fallback (magenta box) if texture missing
 static void drawPlaceholder(SDL_Renderer* r, const SDL_FRect& rct) {
@@ -93,7 +104,7 @@ void Graphics::drawSprite(const Sprite& sprite, const phys::Vec2f& pos) const
     screenPos -= phys::Vec2f{static_cast<float>(sprite.width) / 2.0f, static_cast<float>(sprite.height) / 2.0f};
     const auto screenX = screenPos.x;
     const auto screenY = screenPos.y;
-    const SDL_FRect destRect {screenX, screenY, (float)sprite.width, (float)sprite.height};
+    const SDL_FRect destRect {screenX, screenY, static_cast<float>(sprite.width), static_cast<float>(sprite.height)};
 
     if (SDL_Texture* tex = textureManager_.getTexture(sprite.textureName)) {
         SDL_RenderCopyF(renderer_, tex, &srcRect, &destRect);
@@ -129,11 +140,11 @@ void Graphics::drawText(std::string_view text, float x, float y) const{
         }
 
         constexpr SDL_Color color {255, 255, 255, 255};  // White color
-        SDL_Surface* textSurface = TTF_RenderText_Blended(font, std::string(text).c_str(), color);
 
-        if (textSurface) {
+        if (SDL_Surface *textSurface = TTF_RenderText_Blended(
+                font, std::string(text).c_str(), color)) {
             if (SDL_Texture* fpsTexture = SDL_CreateTextureFromSurface(renderer_, textSurface)) {
-                const SDL_FRect fpsRect {x, y, (float)textSurface->w, (float)textSurface->h};  // Position at (10, 10)
+                const SDL_FRect fpsRect {x, y, static_cast<float>(textSurface->w), static_cast<float>(textSurface->h)};  // Position at (10, 10)
                 SDL_RenderCopyF(renderer_, fpsTexture, nullptr, &fpsRect);
                 SDL_DestroyTexture(fpsTexture);
             }

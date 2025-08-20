@@ -7,8 +7,8 @@
 #pragma once
 
 #include "physics/Vec2.h"
-#include <string_view>
 #include <filesystem>
+#include <string_view>
 
 inline constexpr std::string_view GAME_NAME {"Sandbox 2D"};
 

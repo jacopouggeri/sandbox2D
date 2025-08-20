@@ -1,21 +1,16 @@
 //
-// Created by Jacopo Uggeri on 15/08/2025.
+// Created by Jacopo Uggeri on 20/08/2025.
 //
 
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
-#pragma once
-
-#include "Config.h"
-#include "resources/TextureManager.h"
+#ifndef SANDBOX2D_PLAYER_H
+#define SANDBOX2D_PLAYER_H
 #include "physics/Vec2.h"
+#include "resources/TextureManager.h"
 #include "world/World.h"
-
 
 struct Player {
     constexpr static float SPEED = 10.0f;
     constexpr static float JUMP_SPEED = 10.0f;
-    constexpr static phys::Vec2i WORLD_SIZE {WORLD_WIDTH_CHUNKS * CHUNK_SIZE, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE};
     constexpr static phys::Vec2f PLAYER_START_POS {static_cast<phys::Vec2f>(WORLD_SIZE) / 2.0f};
     phys::Vec2f pos = PLAYER_START_POS;
     phys::Vec2f vel;
@@ -25,13 +20,4 @@ struct Player {
     void move(double deltaSeconds);
 };
 
-struct GameState {
-    bool running = true;
-    bool paused = true;
-    Player player;
-    World world;
-
-    void step(double deltaSeconds);
-};
-
-#endif //GAMESTATE_H
+#endif //SANDBOX2D_PLAYER_H

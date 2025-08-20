@@ -2,9 +2,9 @@
 // Created by Jacopo Uggeri on 19/08/2025.
 //
 
-#include "../Config.h"
-#include "TextureManager.h"
-#include <SDL2/SDL.h>
+#include "../../../include/game/resources/TextureManager.h"
+#include "../../../include/game/Config.h"
+#include <SDL.h>
 #include <SDL_image.h>
 #include <filesystem>
 #include <iostream>
