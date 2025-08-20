@@ -20,7 +20,7 @@ void loop(GameState& gameState, Graphics& graphics) {
 
         const auto elapsedSeconds = static_cast<double>(frameStart - lastStep);
         const double rawDeltaSeconds = elapsedSeconds / static_cast<double>(perfFreq);
-        const double deltaSeconds = std::clamp(rawDeltaSeconds, 0.001, 1.0);
+        const double deltaSeconds = std::clamp(rawDeltaSeconds, 1.0 / 500.0, 1.0);
 
         if (!gameState.paused) {
             handlePlayerInput(gameState);

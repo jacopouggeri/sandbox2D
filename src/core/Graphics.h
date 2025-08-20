@@ -10,6 +10,7 @@
 #include "resources/TextureManager.h"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <string_view>
 
 class Graphics {
@@ -37,6 +38,7 @@ public:
             SDL_DestroyWindow(window_);
             window_ = nullptr;
         }
+        TTF_Quit();
         IMG_Quit();
         SDL_Quit();
     }

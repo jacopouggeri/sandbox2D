@@ -16,7 +16,7 @@ struct Player {
     constexpr static float SPEED = 10.0f;
     constexpr static float JUMP_SPEED = 10.0f;
     constexpr static phys::Vec2i WORLD_SIZE {WORLD_WIDTH_CHUNKS * CHUNK_SIZE, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE};
-    constexpr static phys::Vec2f PLAYER_START_POS = static_cast<phys::Vec2f>(WORLD_SIZE / 2) ;
+    constexpr static phys::Vec2f PLAYER_START_POS {static_cast<phys::Vec2f>(WORLD_SIZE) / 2.0f};
     phys::Vec2f pos = PLAYER_START_POS;
     phys::Vec2f vel;
     Sprite sprite {std::string(PLAYER_TEX)};

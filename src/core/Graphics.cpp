@@ -15,17 +15,17 @@
 
 bool Graphics::init(const int winW, const int winH, std::string_view windowTitle) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cerr << std::format("SDL_Init error: %s\n", SDL_GetError());
+        std::cerr << std::format("SDL_Init error: {}\n", SDL_GetError());
         return false;
     }
 
     if (IMG_Init(IMG_INIT_PNG) == 0) {
-        std::cerr << "IMG Init Error: " << IMG_GetError() << "\n";
+        std::cerr << std::format("IMG_Init error: {}\n", IMG_GetError());
         return false;
     }
 
     if (TTF_Init() != 0) {
-        std::cerr << "TTF Init Error: " << TTF_GetError() << "\n";
+        std::cerr << std::format("TTF_Init error: {}\n", TTF_GetError());
         return false;
     }
 
@@ -35,18 +35,18 @@ bool Graphics::init(const int winW, const int winH, std::string_view windowTitle
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     if (!window_) {
-        std::cerr << std::format("SDL_CreateWindow error: %s\n", SDL_GetError());
+        std::cerr << std::format("SDL_CreateWindow error: {}\n", SDL_GetError());
         return false;
     }
 
     renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer_) {
-        std::cerr << std::format("SDL_CreateRenderer error: %s\n", SDL_GetError());
+        std::cerr << std::format("SDL_CreateRenderer error: {}\n", SDL_GetError());
         return false;
     }
 
     if (SDL_RenderSetVSync(renderer_, 1) != 0){
-        std::cerr << std::format("Could not set vsync. Error: %s\n", SDL_GetError());
+        std::cerr << std::format("Could not set vsync. Error: {}\n", SDL_GetError());
         vsyncEnabled_ = false;
     }
 

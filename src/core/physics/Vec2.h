@@ -39,13 +39,13 @@ namespace phys
             return {x - other.x, y - other.y};
         }
 
-        constexpr Vec2 operator+=(const Vec2& other) {
+        constexpr Vec2& operator+=(const Vec2& other) {
             x += other.x;
             y += other.y;
             return *this;
         }
 
-        constexpr Vec2 operator-=(const Vec2& other) {
+        constexpr Vec2& operator-=(const Vec2& other) {
             x -= other.x;
             y -= other.y;
             return *this;
