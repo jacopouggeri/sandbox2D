@@ -85,7 +85,7 @@ void InputSource::handlePlayerInput(GameState &state) {
         dy /= len;
     }
 
-    state.player.set_velocity({dx , dy});
+    state.player.setVelocity({dx , dy});
 }
 
 InputSource::~InputSource() {

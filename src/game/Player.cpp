@@ -5,7 +5,7 @@
 #include "game/Player.h"
 #include "game/physics/Vec2.h"
 
-void Player::set_velocity(phys::Vec2f v) {
+void Player::setVelocity(phys::Vec2f v) {
     vel = v;
 }
 
