@@ -1,13 +1,11 @@
 //
 // Created by Jacopo Uggeri on 15/08/2025.
 //
-
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
 #pragma once
 
-#include "GameState.h"
-#include "platform/Graphics.h"
+#include "game/GameState.h"
+#include "graphics/Renderer.h"
+#include "input/InputManager.h"
 
 class Game {
 public:
@@ -16,9 +14,11 @@ public:
 
 private:
     GameState gameState_ {};
-    Graphics graphics_ {};
+    Renderer renderer_ {};
+    InputManager inputManager_ {};
 
     void step(double deltaSeconds);
+
 public:
     Game() = default;
     ~Game() = default;
@@ -29,5 +29,3 @@ public:
     Game(Game&&) = delete;
     Game& operator=(Game&&) = delete;
 };
-
-#endif //GAMESTATE_H

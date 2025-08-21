@@ -1,17 +1,17 @@
 //
 // Created by Jacopo Uggeri on 20/08/2025.
 //
-
-#ifndef SANDBOX2D_GAMESTATE_H
-#define SANDBOX2D_GAMESTATE_H
+#pragma once
 #include "Player.h"
 #include "world/World.h"
 
 struct GameState {
+    uint64_t gameTicks = 0;
     bool running = true;
     bool paused = true;
-    Player player;
-    World world;
-};
+    bool debugMode = true;
+    Player player {};
+    World world {};
 
-#endif //SANDBOX2D_GAMESTATE_H
+    bool unpaused() const { return !paused; }
+};

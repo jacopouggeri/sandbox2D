@@ -1,9 +1,6 @@
 //
 // Created by Jacopo Uggeri on 16/08/2025.
 //
-
-#ifndef SANDBOX2D_VEC2_H
-#define SANDBOX2D_VEC2_H
 #pragma once
 #include <cmath>
 #include <type_traits>
@@ -70,5 +67,3 @@ namespace phys
     using Vec2f = Vec2<float>;
 
 }
-
-#endif //SANDBOX2D_VEC2_H
