@@ -12,8 +12,12 @@ class AssetLoader {
 public:
     void loadTextures(SDL_Renderer* renderer);
     void loadFonts();
-    [[nodiscard]] const Texture& getTexture(std::string_view textureName) const;
-    [[nodiscard]] const Font& getFont(std::string_view fontName) const;
+    [[nodiscard]] const Texture& getTexture(std::string_view textureName) const noexcept;
+    [[nodiscard]] const Font& getFont(std::string_view fontName) const noexcept;
+    void clear() noexcept {
+        textures.clear();
+        fonts.clear();
+    }
 
 private:
     void loadTexture(std::string_view textureName, SDL_Renderer* renderer);
@@ -28,7 +32,4 @@ public:
     // Prevent copying
     AssetLoader(const AssetLoader&) = delete;
     AssetLoader& operator=(const AssetLoader&) = delete;
-    // Prevent moving
-    AssetLoader(AssetLoader&&) = delete;
-    AssetLoader& operator=(AssetLoader&&) = delete;
 };

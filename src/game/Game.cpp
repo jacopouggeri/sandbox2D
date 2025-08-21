@@ -26,9 +26,9 @@ void Game::step(double deltaSeconds) {
 }
 
 double getSecondsNow() {
-    const auto now = std::chrono::high_resolution_clock::now();
+    const auto now = std::chrono::steady_clock::now();
     const auto duration = now.time_since_epoch();
-    return duration_cast<std::chrono::duration<double>>(duration).count();
+    return std::chrono::duration_cast<std::chrono::duration<double>>(duration).count();
 }
 
 void Game::loop() {

@@ -2,6 +2,8 @@
 // Created by Jacopo Uggeri on 21/08/2025.
 //
 #include "platform/sdl/GraphicsDevice.h"
+
+#include "game/Config.h"
 #include "game/resources/Sprite.h"
 
 #include <SDL.h>
@@ -68,7 +70,12 @@ static void drawPlaceholder(SDL_Renderer* r, const SDL_FRect& rct) {
 void GraphicsDevice::drawText(std::string_view text, float x, float y) const {
     constexpr SDL_Color color {255, 255, 255, 255};
     TTF_Font* font = assetLoader_.getFont(config::resources::FONT).get();
-    if (const auto textSurface = TTF_RenderText_Blended(font, text.data(), color)) {
+    if (!font) {
+        std::cerr << "Font not loaded: " << std::string(config::resources::FONT) << "\n";
+        return;
+    }
+    const std::string textStr{text};
+    if (const auto textSurface = TTF_RenderText_Blended(font, textStr.c_str(), color)) {
         if (SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer_, textSurface)) {
             const SDL_FRect textRect {x, y, static_cast<float>(textSurface->w), static_cast<float>(textSurface->h)};
             SDL_RenderCopyF(renderer_, textTexture, nullptr, &textRect);
@@ -93,6 +100,7 @@ std::pair<int, int> GraphicsDevice::getWindowSize() const {
 }
 
 GraphicsDevice::~GraphicsDevice() {
+    assetLoader_.clear();
     if (renderer_) {
         SDL_DestroyRenderer(renderer_);
         renderer_ = nullptr;
@@ -105,12 +113,12 @@ GraphicsDevice::~GraphicsDevice() {
 
 void GraphicsDevice::drawTexture(const Sprite &sprite, float screenX, float screenY) const {
     const Texture& texture = assetLoader_.getTexture(sprite.textureName);
-    const float width = sprite.width * config::graphics::DRAW_SCALE;
-    const float height = sprite.height * config::graphics::DRAW_SCALE;
-    const SDL_Rect srcRect {0, 0, static_cast<int>(width), static_cast<int>(height)};
-    screenX -= width / 2.0f;
-    screenY -= height / 2.0f;
-    const SDL_FRect destRect {screenX, screenY, width, height};
+    const SDL_Rect srcRect {0, 0, sprite.width, sprite.height};
+    const float scaledWidth = sprite.width * config::graphics::DRAW_SCALE;
+    const float scaledHeight = sprite.height * config::graphics::DRAW_SCALE;
+    screenX -= scaledWidth / 2.0f;
+    screenY -= scaledHeight / 2.0f;
+    const SDL_FRect destRect {screenX, screenY, scaledWidth, scaledHeight};
     if (SDL_Texture* tex = texture.get()) {
         SDL_RenderCopyF(renderer_, tex, &srcRect, &destRect);
     } else {

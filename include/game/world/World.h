@@ -11,7 +11,7 @@ namespace world {
 constexpr int CHUNK_SIZE = 16;
 constexpr int WORLD_WIDTH_CHUNKS = 8;
 constexpr int WORLD_HEIGHT_CHUNKS = 4;
-constexpr static phys::Vec2i WORLD_SIZE {WORLD_WIDTH_CHUNKS * CHUNK_SIZE, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE};
+constexpr phys::Vec2i WORLD_SIZE {WORLD_WIDTH_CHUNKS * CHUNK_SIZE, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE};
 constexpr int SEA_LEVEL = 0;
 constexpr int CHUNK_COUNT = WORLD_WIDTH_CHUNKS * WORLD_HEIGHT_CHUNKS;
 

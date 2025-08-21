@@ -6,10 +6,11 @@
 #include "game/GameState.h"
 
 #include <SDL.h>
+#include <format>
 #include <iostream>
 
 bool InputSource::init() {
-    if (SDL_Init(SDL_INIT_EVENTS) != 0) {
+    if (SDL_InitSubSystem(SDL_INIT_EVENTS) != 0) {
         std::cerr << std::format("SDL_INIT_EVENTS error: {}\n", SDL_GetError());
         return false;
     }

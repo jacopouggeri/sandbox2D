@@ -4,11 +4,11 @@
 
 #include "game/input/InputManager.h"
 
-bool InputManager::init() const {
+bool InputManager::init() {
         return inputSource_.init();
 }
 
-void InputManager::handleEvents(GameState &state) const {
+void InputManager::handleEvents(GameState &state) {
     inputSource_.handleEvents(state);
     inputSource_.handlePlayerInput(state);
 }

@@ -7,9 +7,9 @@ struct GameState;
 
 class InputSource final {
 public:
-    static bool init();
-    static void handleEvents(GameState& state);
-    static void handlePlayerInput(GameState& state);
+    bool init();
+    void handleEvents(GameState& state);
+    void handlePlayerInput(GameState& state);
 
     ~InputSource();
 };

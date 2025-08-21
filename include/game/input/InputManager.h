@@ -7,8 +7,8 @@
 
 class InputManager {
 public:
-    bool init() const;
-    void handleEvents(GameState& state) const;
+    bool init();
+    void handleEvents(GameState& state);
 
 private:
     InputSource inputSource_;

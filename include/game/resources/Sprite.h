@@ -3,8 +3,6 @@
 //
 
 #pragma once
-#include "game/Config.h"
-
 #include <string>
 
 struct Sprite {

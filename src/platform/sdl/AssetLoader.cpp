@@ -23,23 +23,23 @@ void AssetLoader::loadTextures(SDL_Renderer* renderer)
 }
 
 void AssetLoader::loadTexture(std::string_view textureName, SDL_Renderer* renderer) {
-    SDL_Surface* surf = IMG_Load((config::resources::TEX_PATH / textureName).c_str());
+    SDL_Surface* surf = IMG_Load(std::string(config::resources::TEX_PATH / textureName).c_str());
     if (!surf) {
-        std::cerr << std::format("Failed to load texture with name: {}\n", std::string(textureName));
+        std::cerr << std::format("Failed to load texture '{}': {}\n", textureName, IMG_GetError());
         return;
     }
 
     SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surf);
     SDL_FreeSurface(surf);
     if (!tex) {
-        std::cerr << std::format("Failed to create texture with name: {}", std::string(textureName));
+        std::cerr << std::format("Failed to create texture '{}': {}\n", textureName, SDL_GetError());
         return;
     }
     // Cache loaded textures
     textures.emplace(textureName, tex);
 }
 
-const Texture& AssetLoader::getTexture(std::string_view textureName) const {
+const Texture& AssetLoader::getTexture(std::string_view textureName) const noexcept {
     static Texture emptyTexture;
     if (const auto it = textures.find(std::string(textureName)); it != textures.end()) {
         return it->second;
@@ -56,7 +56,7 @@ void AssetLoader::loadFonts() {
 }
 
 void AssetLoader::loadFont(std::string_view fontName, int size) {
-    TTF_Font* font = TTF_OpenFont((config::resources::FONT_PATH / fontName).c_str(), size);
+    TTF_Font* font = TTF_OpenFont(std::string(config::resources::FONT_PATH / fontName).c_str(), size);
     if (!font) {
         std::cerr << "Failed to load font: " << TTF_GetError() << "\n";
         return;
@@ -64,7 +64,7 @@ void AssetLoader::loadFont(std::string_view fontName, int size) {
     fonts.emplace(fontName, font);
 }
 
-const Font& AssetLoader::getFont(std::string_view fontName) const {
+const Font& AssetLoader::getFont(std::string_view fontName) const noexcept {
     static Font emptyFont;
     if (const auto it = fonts.find(std::string(fontName)); it != fonts.end()) {
         return it->second;
