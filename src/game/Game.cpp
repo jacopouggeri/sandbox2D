@@ -3,6 +3,7 @@
 //
 
 #include "game/Game.h"
+#include "game/Config.h"
 #include "game/GameState.h"
 
 #include <chrono>
@@ -18,11 +19,13 @@ bool Game::init() {
         return false;
     }
     gameState_.world.init();
+    gameState_.physicsWorld.addBody(gameState_.player.getBody());
     return true;
 }
 
 void Game::step(double deltaSeconds) {
-    gameState_.player.move(deltaSeconds);
+    gameState_.player.step(deltaSeconds);
+    gameState_.physicsWorld.resolveCollisions(deltaSeconds, gameState_.world);
 }
 
 double getSecondsNow() {

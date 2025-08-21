@@ -5,11 +5,13 @@
 #include "game/Player.h"
 #include "game/physics/Vec2.h"
 
-void Player::setVelocity(phys::Vec2f v) {
-    vel = v;
-}
-
-void Player::move(double deltaSeconds) {
-    const auto dt = static_cast<float>(deltaSeconds);
-    pos +=  vel * SPEED * dt;
+void Player::step(double deltaSeconds) {
+    constexpr static float SPEED = 10.0f;
+    constexpr static float LERP_SPEED = 5.0f;
+    float lerpFactor = 1.0f - std::exp(-LERP_SPEED * deltaSeconds);
+    direction = phys::lerp(direction, targetDirection, lerpFactor);
+    body_.velocity = direction * SPEED;
+    constexpr float GRAVITY = 300;
+    body_.acceleration.y = GRAVITY;
+    body_.step(deltaSeconds);
 }

@@ -2,7 +2,8 @@
 // Created by Jacopo Uggeri on 20/08/2025.
 //
 #pragma once
-#include "Player.h"
+#include "game/Player.h"
+#include "physics/PhysicsWorld.h"
 #include "world/World.h"
 
 struct GameState {
@@ -12,6 +13,7 @@ struct GameState {
     bool debugMode = true;
     Player player {};
     World world {};
+    phys::PhysicsWorld physicsWorld {};
 
     bool unpaused() const { return !paused; }
 };

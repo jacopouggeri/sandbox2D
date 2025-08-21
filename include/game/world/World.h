@@ -4,6 +4,7 @@
 #pragma once
 
 #include "game/Config.h"
+#include "game/physics/DynamicBody.h"
 #include "game/resources/Sprite.h"
 #include <array>
 
@@ -11,7 +12,7 @@ namespace world {
 constexpr int CHUNK_SIZE = 16;
 constexpr int WORLD_WIDTH_CHUNKS = 8;
 constexpr int WORLD_HEIGHT_CHUNKS = 4;
-constexpr static phys::Vec2i WORLD_SIZE {WORLD_WIDTH_CHUNKS * CHUNK_SIZE, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE};
+constexpr phys::Vec2i WORLD_SIZE {WORLD_WIDTH_CHUNKS * CHUNK_SIZE, WORLD_HEIGHT_CHUNKS * CHUNK_SIZE};
 constexpr int SEA_LEVEL = 0;
 constexpr int CHUNK_COUNT = WORLD_WIDTH_CHUNKS * WORLD_HEIGHT_CHUNKS;
 
@@ -19,22 +20,20 @@ constexpr int CHUNK_COUNT = WORLD_WIDTH_CHUNKS * WORLD_HEIGHT_CHUNKS;
 
 
 struct Tile {
-    Sprite sprite;
+    Sprite sprite {};
 };
 
 struct Chunk {
-    std::array<Tile, world::CHUNK_SIZE* world::CHUNK_SIZE> tiles;
+    std::array<Tile, world::CHUNK_SIZE * world::CHUNK_SIZE> tiles {};
 
     Tile& getTile(int tileX, int tileY);
 };
 
 struct World {
-    std::array<Chunk, world::CHUNK_COUNT> chunks;
+    std::array<Chunk, world::CHUNK_COUNT> chunks {};
 
     void init();
-
     Tile& getTileGlobal(int worldX, int worldY);
-
     Chunk& getChunk(int chunkX, int chunkY);
 
     [[nodiscard]] static constexpr phys::Vec2i chunkCoords(int chunkIdx) noexcept {

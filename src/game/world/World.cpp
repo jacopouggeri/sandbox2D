@@ -37,9 +37,11 @@ Chunk& World::getChunk(int chunkX, int chunkY) {
 }
 
 Tile& World::getTileGlobal(int worldX, int worldY) {
-    const int chunkX = worldX / world::CHUNK_SIZE;
-    const int chunkY = worldY / world::CHUNK_SIZE;
-    const int tileX  = worldX % world::CHUNK_SIZE;
-    const int tileY  = worldY % world::CHUNK_SIZE;
+    int arrayX = worldX + world::WORLD_SIZE.x / 2;
+    int arrayY = worldY + world::WORLD_SIZE.y / 2;
+    const int chunkX = arrayX / world::CHUNK_SIZE;
+    const int chunkY = arrayY / world::CHUNK_SIZE;
+    const int tileX  = arrayX % world::CHUNK_SIZE;
+    const int tileY  = arrayY % world::CHUNK_SIZE;
     return getChunk(chunkX, chunkY).getTile(tileX, tileY);
 }

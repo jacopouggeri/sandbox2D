@@ -24,8 +24,11 @@ namespace phys
                                   static_cast<double>(y) * static_cast<double>(other.y));
         }
 
-        constexpr Vec2 tensorDot(const Vec2& other) {
-            return {x * other.x, y * other.y};
+        [[nodiscard]] constexpr auto normalized() const {
+            using R = std::conditional_t<std::is_integral_v<T>, double, T>;
+            const auto len = length();
+            if (len == 0) return Vec2{};
+            return Vec2{static_cast<R>(x) / len, static_cast<R>(y) / len};
         }
 
         constexpr Vec2 operator+(const Vec2& other) const {
@@ -62,6 +65,16 @@ namespace phys
             return {static_cast<U>(x), static_cast<U>(y)};
         }
     };
+
+    template<typename T>
+    constexpr Vec2<T> operator*(T scalar, const Vec2<T>& vec) {
+        return {vec.x * scalar, vec.y * scalar};
+    }
+
+    template<typename T>
+    constexpr Vec2<T> lerp(const Vec2<T>& a, const Vec2<T>& b, double t) {
+        return a + (b - a) * t;
+    }
 
     using Vec2i = Vec2<int>;
     using Vec2f = Vec2<float>;

@@ -9,7 +9,7 @@
 #include <iostream>
 
 bool InputSource::init() {
-    if (SDL_Init(SDL_INIT_EVENTS) != 0) {
+    if (SDL_InitSubSystem(SDL_INIT_EVENTS) != 0) {
         std::cerr << std::format("SDL_INIT_EVENTS error: {}\n", SDL_GetError());
         return false;
     }
@@ -35,7 +35,7 @@ void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* e) {
     if (e->button == SDL_BUTTON_LEFT && e->state == SDL_PRESSED) {
         const int mx = e->x;
         const int my = e->y;
-        gameState.player.pos = {static_cast<float>(mx), static_cast<float>(my)};
+        gameState.player.targetDirection = {static_cast<float>(mx), static_cast<float>(my)};
     }
 }
 
@@ -44,7 +44,7 @@ void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e)
     if (e->state & SDL_BUTTON_LMASK) {
         const int mx = e->x;
         const int my = e->y;
-        gameState.player.pos = {static_cast<float>(mx), static_cast<float>(my)};
+        gameState.player.targetDirection = {static_cast<float>(mx), static_cast<float>(my)};
     }
 }
 
@@ -70,7 +70,7 @@ void InputSource::handleEvents(GameState &state) {
     }
 }
 
-void InputSource::handlePlayerInput(GameState &state) {
+void InputSource::handlePlayerInput(const GameState &state) {
     const Uint8* keyState = SDL_GetKeyboardState(nullptr);
 
     float dx = 0, dy = 0;
@@ -85,7 +85,7 @@ void InputSource::handlePlayerInput(GameState &state) {
         dy /= len;
     }
 
-    state.player.setVelocity({dx , dy});
+    state.player.targetDirection = {dx , dy};
 }
 
 InputSource::~InputSource() {

@@ -3,6 +3,8 @@
 //
 
 #include "game/graphics/Renderer.h"
+#include "game/Config.h"
+#include "game/GameState.h"
 
 bool Renderer::init(int winW, int winH, std::string_view windowTitle) {
     if (!graphicsDevice_.init(winW, winH, windowTitle)) return false;
@@ -42,7 +44,7 @@ phys::Vec2f Renderer::toScreenCoords(const phys::Vec2f &pos) const {
     return (pos - camera_.pos) * config::graphics::TILE_SIZE * config::graphics::DRAW_SCALE + (windowSize / 2.0f);
 }
 
-void Renderer::drawDebugInfo(const GameState &gameState, double deltaSeconds) const {
+void Renderer::drawDebugInfo(const GameState& gameState, double deltaSeconds) const {
     graphicsDevice_.drawText(std::format("FPS: {:.0f}", 1.0 / deltaSeconds), 10, 10);
     graphicsDevice_.drawText(std::format("x: {:.2f}, y: {:.2f}", gameState.player.pos.x, gameState.player.pos.y), 10, 40);
     graphicsDevice_.drawText(std::format("World Size: {}, {}", world::WORLD_SIZE.x, world::WORLD_SIZE.y), 10, 70);
@@ -65,7 +67,7 @@ void Renderer::render(const GameState& gameState, double deltaSeconds) {
     graphicsDevice_.endFrame();
 }
 
-void Renderer::drawSprite(const Sprite &sprite, phys::Vec2f pos) const {
+void Renderer::drawSprite(const Sprite& sprite, phys::Vec2f pos) const {
     auto [screenX, screenY] = toScreenCoords(pos);
     graphicsDevice_.drawTexture(sprite, screenX, screenY);
 }

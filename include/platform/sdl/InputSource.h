@@ -9,7 +9,7 @@ class InputSource final {
 public:
     static bool init();
     static void handleEvents(GameState& state);
-    static void handlePlayerInput(GameState& state);
+    static void handlePlayerInput(const GameState& state);
 
     ~InputSource();
 };

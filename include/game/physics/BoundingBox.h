@@ -8,8 +8,8 @@
 namespace phys {
 
 struct BoundingBox {
-    Vec2f position;
-    Vec2f halfSize;
+    Vec2f halfSize {};
+    Vec2f position {};
 
     bool overlaps(const BoundingBox& other) const {
         return !(position.x + halfSize.x < other.position.x - other.halfSize.x ||
