@@ -1,16 +1,24 @@
 //
-// Created by Jacopo Uggeri on 15/08/2025.
+// Created by Jacopo Uggeri on 21/08/2025.
 //
 
-#ifndef IOEVENTS_H
-#define IOEVENTS_H
-#pragma once
-#include "GameState.h"
-#include <SDL2/SDL.h>
+#include "platform/sdl/InputSource.h"
+#include "game/GameState.h"
+
+#include <SDL.h>
 #include <format>
 #include <iostream>
 
-inline void onKeyDown(GameState& state, const SDL_Keysym* keysym) {
+bool InputSource::init() {
+    if (SDL_InitSubSystem(SDL_INIT_EVENTS) != 0) {
+        std::cerr << std::format("SDL_INIT_EVENTS error: {}\n", SDL_GetError());
+        return false;
+    }
+    return true;
+}
+
+
+void onKeyDown(GameState &state, const SDL_Keysym *keysym) {
     switch (keysym->sym) {
     case SDLK_q: // quit
         std::cout << std::format("Quit {}\n", state.paused);
@@ -24,7 +32,7 @@ inline void onKeyDown(GameState& state, const SDL_Keysym* keysym) {
     }
 }
 
-inline void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* e) {
+void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* e) {
     if (e->button == SDL_BUTTON_LEFT && e->state == SDL_PRESSED) {
         const int mx = e->x;
         const int my = e->y;
@@ -32,7 +40,8 @@ inline void onMouseButtonDown(GameState& gameState, const SDL_MouseButtonEvent* 
     }
 }
 
-inline void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e) {
+void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e)
+{
     if (e->state & SDL_BUTTON_LMASK) {
         const int mx = e->x;
         const int my = e->y;
@@ -40,27 +49,29 @@ inline void onMouseMotion(GameState& gameState, const SDL_MouseMotionEvent* e) {
     }
 }
 
-inline void handleEvents(GameState& state, SDL_Event* e) {
-    while (SDL_PollEvent(e)) {
-        switch (e->type) {
+void InputSource::handleEvents(GameState &state) {
+    SDL_Event e;
+    SDL_Event* ePtr = &e;
+    while (SDL_PollEvent(ePtr)) {
+        switch (ePtr->type) {
         case SDL_QUIT:
             state.running = false;
             break;
         case SDL_KEYDOWN:
-            onKeyDown(state, &e->key.keysym);
+            onKeyDown(state, &ePtr->key.keysym);
             break;
         case SDL_MOUSEBUTTONDOWN:
-            onMouseButtonDown(state, &e->button);
+            onMouseButtonDown(state, &ePtr->button);
             break;
         case SDL_MOUSEMOTION:
-            onMouseMotion(state, &e->motion);
+            onMouseMotion(state, &ePtr->motion);
             break;
         default: ;
         }
     }
 }
 
-inline void handlePlayerInput(GameState& state) {
+void InputSource::handlePlayerInput(GameState &state) {
     const Uint8* keyState = SDL_GetKeyboardState(nullptr);
 
     float dx = 0, dy = 0;
@@ -78,4 +89,6 @@ inline void handlePlayerInput(GameState& state) {
     state.player.set_velocity({dx , dy});
 }
 
-#endif //IOEVENTS_H
+InputSource::~InputSource() {
+    SDL_QuitSubSystem(SDL_INIT_EVENTS);
+}
